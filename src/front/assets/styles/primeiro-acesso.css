@@ -1,0 +1,21 @@
+ul, li {
+    font-family: var(--font-family);
+    color: var(--branco);
+    padding: 10px 0;
+    margin: 0;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style-position: inside;
+}
+
+main {
+    height: 80%;
+}

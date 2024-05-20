@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+:root{
+    /*Paleta de Cores*/
+    --vermelho: #FE5E48;
+    --azul: #5CCAC4;
+    --branco: #FEF9E6;
+    --preto: #333;
+    /*Tipografia*/
+    --font-family: "Quicksand", sans-serif;
+    /*--elemento-atributo-plataforma(d = desktop|m = mobile)*/
+    --title-weight: <600>;
+    --titleG-size-d: 2.5rem;
+    --titleM-size-d: 2rem;
+    --titleP-size-d: 1.5rem;
+    --titleG-size-m: 2rem;
+    --titleM-size-m: 1.5rem;
+    --text-weight: <400>;
+    --text-size-d: 1rem;
+    --text-size-m: 0.8rem;
+    --link-size-d: 1.2rem; /*Tamanho do texto dos botões - desktop*/
+    --link-size-m: 1rem; /*Tamanho do texto dos botões - mobile*/
+}
+
+.btn-primary {
+    background-color: var(--vermelho);
+    border-color: var(--branco);
+}
+
+.btn-primary:hover {
+    background-color: var(--azul);
+}
+
+.btn-secondary {
+    background-color: var(--azul);
+    border-color: var(--branco);
+}
+
+section#vh {
+    min-height: calc(100vh - 145px);
+    padding: 40px 0;
+}
+
+section.atendimento div {
+    margin: 10px 0;
+    padding: 10px 10px;
+    border: solid 2px;
+    border-radius: 20px;
+    border-color: var(--branco);
+}
+
+section.atendimento i {
+    color: var(--branco);
+}
+
+/*MODAL*/
+#addAtendimento .modal-content,#temPerfil .modal-content {
+    background-color: var(--preto);
+}
+/*FIM MODAL*/
