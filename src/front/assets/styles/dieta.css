@@ -1,9 +1,62 @@
+:root{
+    /*Paleta de Cores*/
+    --principal: #FEF9E6;
+    --secundaria: #02232C;
+    --preto: #333;
+    --azul: #5CCAC4;
+    --vermelho: #FE5E48;
+    
+
+    /*Tipografia*/
+    --font-family: "Quicksand", sans-serif;
+
+    /*--elemento-atributo-plataforma(d = desktop|m = mobile)*/
+    --title-weight: <600>;
+    --titleG-size-d: 2.5rem;
+    --titleM-size-d: 2rem;
+    --titleP-size-d: 1.5rem;
+    --titleG-size-m: 2rem;
+    --titleM-size-m: 1.5rem;
+    --text-weight: <400>;
+    --text-size-d: 1rem;
+    --text-size-m: 0.8rem;
+    --link-size-d: 1.2rem; /*Tamanho do texto dos botões - desktop*/
+    --link-size-m: 1rem; /*Tamanho do texto dos botões - mobile*/
+}
+
 body {
     display: table;
     margin: 0;
     width: 100%;
     min-height: 100vh;
-    color: var(--branco);
+    color: var(--principal);
+}
+
+.delete-meal{
+    background-color: var(--vermelho);
+    border: none;
+}
+.delete-meal:hover{
+    background-color: var(--vermelho);
+    border: none;
+}
+
+.add-food{
+    background-color: var(--secundaria);
+    border: none;
+}
+.add-food:hover{
+    background-color: var(--secundaria);
+    border: none;
+}
+
+.save-meal{
+    background-color: var(--azul);
+    border: none;
+}
+.save-meal:hover{
+    background-color: var(--azul);
+    border: none;
 }
 
 .container-fluid { padding: 0; }
@@ -22,6 +75,8 @@ body {
     border-radius: 3vw;
 }
 
+h3 { color: var(--preto); }
+
 .foods-list > :not(:first-child) { margin-top: 1vw; }
 
 
@@ -35,7 +90,7 @@ body {
 }
 #create-meal-button:hover {
     transform: scale(1.2);
-    background-color: black;
+    background-color: var(--preto);
     border: solid 0.1vw #ffc107;
 }
 #create-meal-button > svg { width: 50px; }
@@ -68,12 +123,14 @@ body {
 #create-meal-button:hover #create-meal-tooltip {
     color: #ffc107;
     opacity: 1;
-    background-color: black;
+    background-color: var(--preto);
     border: solid 0.1vw #ffc107;
     transform: translate(-50%, -50%) translateX(100%);
 }
 
-
+.text-warning{
+    color: var(--vermelho) !important
+}
 
 input {
     background-color: transparent;

@@ -1,116 +1,95 @@
-'### 3.3.3 Processo 3 – Gerenciamento de Dieta
+# 3.3.3 Processo 3 – Gerenciamento de Dieta
 
 Este processo visa proporcionar uma experiência eficiente e intuitiva para os usuários no que diz respeito à criação e gerenciamento de dietas. Uma oportunidade de melhoria seria garantir uma interface de usuário amigável e informativa, fornecendo feedback claro e útil sobre a adequação da dieta em relação às metas estabelecidas.
 
-![PROCESSO 3](../images/gerenciamento-dieta.png "Modelo BPMN do Processo 3.")
+## Diagrama
 
-#### Detalhamento das atividades
+![PROCESSO 3](../images/dieta-final.png "Modelo BPMN do Processo 3.")
 
-### Registro de usuário
+## Detalhamento de atividades
 
-**Usuário insere dados de registro:** O usuário informa seu nome, endereço de e-mail, senha, telefone e endereço.
+### Tipo de acesso
 
-**Sistema verifica usuário existente:** O sistema verifica se o e-mail do usuário já existe no sistema.
+**Se o usuário for um cliente de um nutricionista:** poderá somente visualizar a dieta, e não editá-la
 
-**Se o usuário existir:** O sistema exibe uma mensagem informando que o e-mail já está registrado. O usuário pode tentar entrar com suas credenciais existentes ou redefinir sua senha.
+**Se o usuário for um nutricionista ou um usuário independente:** poderá visualizar e editar a dieta
 
-**Se o usuário não existir:** O sistema prossegue para criar uma nova conta para o usuário.
+### Possíveis ações do usuário
 
-### Gerenciamento de refeições
+**Usuário seleciona "Criar Refeição":** usuário clica no botão "Criar refeição" no menu principal, o que renderiza uma nova caixa de refeição.
 
-**Usuário seleciona "Criar Refeição":** O usuário seleciona a opção "Gerenciar refeições" no menu principal.
+Após uma refeição ter sido criada, o usuário pode realizar várias ações diferentes relacionadas a ela - além de criar outra refeição.
 
-**Sistema exibe opções de gerenciamento de refeições:** O sistema exibe uma lista de opções de gerenciamento de refeições, como:
+**Usuário cria/edita nome da refeição:** usuário clica no campo referente ao nome da refeição e digita o texto.
 
-**Adicionar refeição:** O usuário pode adicionar uma nova refeição à sua dieta.
+**Usuário seleciona "Deletar Refeição":** usuário clica no botão "Deletar refeição" dentro da caixa da refeição, o que deleta ela da página e do banco de dados, juntamente com os alimentos dentro dela.
 
-**Editar refeição:** O usuário pode editar uma refeição existente em sua dieta.
+**Usuário seleciona "Criar Alimento":** usuário clica no botão "Criar alimento" dentro da caixa da refeição, o que renderiza um painel com campos refentes ao novo alimento - nome, calorias, proteínas, carboidratos, gorduras e tipo de porção (unidade ou gramas). Após preencher os campos, o sistema checa se o "novo" alimento já existe ou não no banco de dados:
+- Se sim, a criação do alimento é cancelada;
+- Se não, o novo alimento é salvo no banco de dados e adicionado à refeição (com um campo "Quantidade" vazio).
 
-**Excluir refeição:** O usuário pode excluir uma refeição existente de sua dieta.
+**Usuário seleciona "Adicionar Alimento":** usuário clica no botão "Adicionar alimento" que abre um menu dropdown com todas as opções de alimento no banco de dados. Ao selecionar uma das opções, ela é adicionada à refeição (com um campo "Quantidade" vazio).
 
-**Visualizar histórico de refeições:** O usuário pode visualizar um histórico de suas refeições anteriores.
+**Usuário preenche/edita a quantidade do alimento:** esta tarefa vem depois do usuário criar um novo alimento ou adicionar um alimento. O usuário preenche o campo "Quantidade" do alimento com um número referente à quantidade desejada do alimento.
 
-**Usuário seleciona uma opção:** O usuário seleciona a opção de gerenciamento de refeição desejada.
+**Usuário seleciona "Deletar Alimento":** usuário clica no botão "Deletar alimento" que remove o alimento da caixa da refeição
 
-**Sistema executa a operação selecionada:** O sistema executa a operação selecionada com base na escolha do usuário. Por exemplo, se o usuário selecionar "Adicionar refeição", o sistema exibirá um formulário para o usuário inserir os detalhes de sua nova refeição.
+**Cálculo do total de calorias e macros da refeição:** esta tarefa é acionada após o usuário informar a quantidade de um alimento ou deletar um alimento. O sistema irá recalcular o total de calorias e macros da refeição após a alteração.
 
-**Usuário insere ou edita detalhes da refeição:** O usuário insere ou edita os detalhes da refeição, como nome da refeição, itens alimentares, quantidades e informações sobre calorias e macronutrientes.
+**Acionamento do processo de Comparações de Calorias e Macros:** o processo será acionado após se deletar uma refeição ou se calcular o total de calorias e macros de uma refeição. O processo irá calcular o total de calorias e macros de toda a dieta, e em seguida irá comparar os valores com as calorias e macros do objetivo do usuário.
 
-**Sistema salva detalhes da refeição:** O sistema salva os detalhes da refeição no banco de dados.
-
-**Sistema atualiza histórico de refeições:** O sistema atualiza o histórico de refeições do usuário com as informações da refeição nova ou editada.
-
-**Sistema exibe mensagem de confirmação:** O sistema exibe uma mensagem de confirmação informando ao usuário que a refeição foi adicionada, editada ou excluída com sucesso.
-
+**Atualização do painel comparativo:** finalmente, com os dados do processo de comparação, o painel será atualizado exibindo para o usuário o novo status dele em relação ao seu objetivo após a última alteração feita.
 
 **Criar refeição**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
 | ---             | ---              | ---            | ---               |
-| Refeição | Caixa de texto | - | (default) |
-**Usuário insere dados de registro:** O usuário informa seu nome, endereço de e-mail, senha, telefone e endereço.
+| Refeição | Seleção única | Não pode estar em branco, máximo de 50 caracteres | (default) |
 
-**Editar refeição**
+**Editar nome da refeição**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
 | ---             | ---              | ---            | ---               |
-| Refeição | Seleção única | - | (default) |
+| Refeição | Caixa de texto | Máximo de 50 caracteres, deve ser uma refeição previamente criada no sistema | (default) |
 
 **Deletar refeição**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
 | ---             | ---              | ---            | ---               |
-| Refeição | Seleção única | - | (default) |
+| Refeição | Seleção única | Deve ser uma refeição previamente criada no sistema | (default) |
 
 **Criar alimento**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
 | ---             | ---              | ---            | ---               |
-| Alimento | Caixa de texto | - | (default) |
-
-**Deletar alimento**
-
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-| Refeição | Seleção única | - | (default) |
-| Alimento | Seleção única | - | (default) |
-
-**Alterar alimento**
-
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-| Refeição | Seleção única | - | (default) |
-| Alimento | Seleção única | - | (default) |
-| Quantidade | Número | Maior que zero | (default) |
+| Alimento | Caixa de texto | Não pode estar em branco, máximo de 50 caracteres| (default) |
+| Alimento | Caixa de texto | Não pode estar em branco, máximo de 50 caracteres| (default) |
+| Alimento | Caixa de texto | Não pode estar em branco, máximo de 50 caracteres| (default) |
+| Alimento | Caixa de texto | Não pode estar em branco, máximo de 50 caracteres| (default) |
+| Alimento | Caixa de texto | Não pode estar em branco, máximo de 50 caracteres| (default) |
 
 **Adicionar alimento**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
 | ---             | ---              | ---            | ---               |
-| Refeição | Seleção única | - | (default) |
-| Alimento | Seleção única | - | (default) |
-| Quantidade | Número | Maior que zero | (default) |
+| Alimento | Seleção única| Deve ser uma refeição previamente criada no sistema | (default) |
 
 **Informar quantidade do alimento**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
 | ---             | ---              | ---            | ---               |
-| Refeição | Seleção única | - | (default) |
-| Alimento | Seleção única | - | (default) |
 | Quantidade | Número | Maior que zero | (default) |
 
-**Alterar quantidade de alimento**
+**Deletar alimento**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
 | ---             | ---              | ---            | ---               |
-| Refeição | Seleção única | - | (default) |
-| Alimento | Seleção única | - | (default) |
-| Quantidade | Número | Maior que zero | (default) |
+| Alimento | Seleção única | Deve ser um alimento previamente criada no sistema | (default) |
 
 | **Comandos**         |  **Destino**                   | **Tipo** |
 | ---                  | ---                            | ---               |
 | Verificar se o alimento já existe | Busca no banco de alimentos se já existe um alimento com o mesmo nome | (default) |
 | Cancelar criação de alimento | Interrompe e anula a requisição de criação de novo alimento | (default) |
-| Adicionar alimento automaticamente à refeição | Adiciona o alimento recém-criado à refeição em que a caixa de criação foi aberta | (default) |
+| Adicionar alimento à refeição | Adiciona o alimento recém-criado à refeição em que a caixa de criação foi aberta | (default) |
 | Calcular total de calorias e macros da refeição | Soma as calorias e macros de cada alimento (baseado na quantidade do mesmo) e exibe num painel na região infeiror da caixa da refeição | (default) |
 | Atualizar painel comparativo "Objetivos VS Dieta" | Recalcula a diferença entre as calorias e macros recomendados nos objetivos do usuário e o total da soma de calorias e macros de todas as refeições da dieta | (default) |

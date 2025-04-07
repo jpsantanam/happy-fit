@@ -2,7 +2,7 @@
 
 ### 4.1. Modelo de dados
 
-![Modelo relacional completo](images/DiagramaHappyFit.jpg "Modelo relacional completo.")
+![Modelo relacional completo](images/DiagramaHappyFit-Final.jpg "Modelo relacional completo.")
 ---
 
 ### 4.2. Tecnologias
@@ -14,5 +14,5 @@ _Descreva qual(is) tecnologias você vai usar para resolver o seu problema, ou s
 | SGBD           | MySQL           |
 | Front end      | HTML+CSS+JS     |
 | Back end       | Java SpringBoot |
-| Deploy         | Github Pages    |
+| Deploy         | Azzure + Render |
 

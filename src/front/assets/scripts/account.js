@@ -1,6 +1,5 @@
 const apiURL = `${API_URL}`;
 
-console.log(userData);
 async function fetchUserDetails() {
   try {
     const response = await fetch(`${apiURL}/user/${userData.id}/profile`);
@@ -21,6 +20,84 @@ async function fetchUserNutritionist() {
   }
 }
 
+async function fetchMacroProteins() {
+  try {
+    const response = await fetch(`${apiURL}/user/${userData.id}/diary/totalProteins`);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar os dados:', error);
+  }
+}
+
+async function fetchMacroCalories() {
+  try {
+    const response = await fetch(`${apiURL}/user/${userData.id}/diary/totalCalories`);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar os dados:', error);
+  }
+}
+
+async function fetchMacroCarbs() {
+  try {
+    const response = await fetch(`${apiURL}/user/${userData.id}/diary/totalCarbs`);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar os dados:', error);
+  }
+}
+
+async function fetchMacroFat() {
+  try {
+    const response = await fetch(`${apiURL}/user/${userData.id}/diary/totalFats`);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar os dados:', error);
+  }
+}
+
+async function fetchDiet() {
+  try {
+    const response = await fetch(`${apiURL}/user/${userData.id}/diet`);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar os dados:', error);
+  }
+}
+
+async function fetchCountDiary() {
+  try {
+    const response = await fetch(`${apiURL}/user/${userData.id}/diary/count`);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar os dados:', error);
+  }
+}
+
+async function fetchLatestDiary() {
+  try {
+    const response = await fetch(`${apiURL}/user/${userData.id}/diary/latest`);
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Erro ao buscar os dados:', error);
+  }
+}
+
+
 const botaoPerfil = document.getElementById('button-perfilAlimentar');
 if (userData.role === "USER") {
   updateUserDetails(userData);
@@ -32,10 +109,19 @@ if (userData.role === "NUTRITIONIST") {
 }
 
 
+
 //Função que mostra os detalhes do perfil
 async function updateUserDetails(user) {
   const nutritionist = await fetchUserNutritionist();
   const perfil = await fetchUserDetails();
+  const proteins = await fetchMacroProteins();
+  const carbs = await fetchMacroCarbs();
+  const fats = await fetchMacroFat();
+  const calories = await fetchMacroCalories();
+  const diet = await fetchDiet();
+  const countDiary = await fetchCountDiary();
+  const latest = await fetchLatestDiary();
+
   if (user) {
     document.getElementById('user-name').textContent = user.name;
     document.getElementById('user-surname').textContent = user.surname;
@@ -67,29 +153,23 @@ async function updateUserDetails(user) {
       document.getElementById('user-levelAthlete').textContent = "Trabalho físico ou exercício intenso";
     } else document.getElementById('user-levelAthlete').textContent = "Atleta Profissional";
 
-    if (perfil.smokes) {
-      document.getElementById('user-smoke').textContent = "Sim";
-    } else document.getElementById('user-smoke').textContent = "Não";
-
-    if (perfil.drinks) {
-      document.getElementById('user-alcool').textContent = "Sim";
-    } else document.getElementById('user-alcool').textContent = "Não";
-
-    if (perfil.hadSurgeries) {
-      document.getElementById('user-surgery').textContent = "Sim";
-    } else document.getElementById('user-surgery').textContent = "Não";
-
-    if (perfil.hasDiseases) {
-      document.getElementById('user-illness').textContent = "Sim";
-    } else document.getElementById('user-illness').textContent = "Não";
-
-    if (perfil.hasPain) {
-      document.getElementById('user-pain').textContent = "Sim";
-    } else document.getElementById('user-pain').textContent = "Não";
-
   } else {
     alert('Usuário não encontrado');
   }
+
+  document.getElementById('caloriasUltimo').textContent = latest.totalCalories;
+  document.getElementById('proteinasUltimo').textContent = latest.totalProteins;
+  document.getElementById('carboidratosUltimo').textContent = latest.totalCarbs;
+  document.getElementById('gorduraUltimo').textContent = latest.totalFats;
+  document.getElementById('caloriasEsperado').textContent = diet.totalCalories;
+  document.getElementById('proteinasEsperado').textContent = diet.totalProteins;
+  document.getElementById('carboidratosEsperado').textContent = diet.totalCarbs;
+  document.getElementById('gorduraEsperado').textContent = diet.totalFats;
+  document.getElementById('caloriasMedia').textContent = (calories/countDiary).toFixed(2);
+  document.getElementById('proteinasMedia').textContent = (proteins/countDiary).toFixed(2);
+  document.getElementById('carboidratosMedia').textContent = (carbs/countDiary).toFixed(2);
+  document.getElementById('gorduraMedia').textContent = (fats/countDiary).toFixed(2);
+
 }
 
 async function updateNutritionistDetails(user) {
@@ -156,21 +236,28 @@ async function submitForm(event) {
     alert("As duas senhas digitadas não são iguais.");
   } else {
 
+    if(userData.role == "NUTRITIONIST"){
+      aux = 2;
+    } else aux = 1;
+
     const requestBody = {
       name: userData.name,
+      surname: userData.surname,
       email: userData.email,
       password: password,
-      role: userData.role
+      role: aux
     };
 
-    putData(`${apiURL}/user/${userData.id}`, requestBody).then((data) => {
-      console.log('Successfully updated --- in the database');
+    putData(`${apiURL}/user/${userData.id}`, requestBody, "Successfully updated --- in the database").then((data) => {
       console.log(data);
     }).catch((error) => {
       console.error('Error while updating ---:', error);
     });
 
   }
+
+  alert('Senha trocada com sucesso');
+  window.location.href = 'account.html';
 
 }
 
@@ -193,7 +280,7 @@ async function excluirPerfil() {
       if (response.ok) {
         const data = await response.json();
         console.log(data.message);
-        window.location.href = 'login.html';
+        window.location.href = 'account.html';
       } else {
         const errorData = await response.json();
         console.error(errorData.error);

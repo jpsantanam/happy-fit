@@ -1,68 +1,80 @@
-async function getData(resource) {
+// const API_URL = "http://localhost:8080";
+// Para deploy:
+const API_URL = "https://happyfit-app.azurewebsites.net";
+
+async function getData(resource, successMessage) {
     try {
         const response = await fetch(`${resource}`, {
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (response.ok) console.log(successMessage);
+        else throw new Error(`HTTP error! status: ${response.status}`);
 
         return response.json();
     } catch (error) {
-        console.error('Error fetching JSON::', error);
+        console.error("Error fetching JSON::", error);
     }
 }
 
-async function postData(resource, requestBody) {
+async function postData(resource, requestBody, successMessage) {
     try {
         const response = await fetch(`${resource}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
             body: JSON.stringify(requestBody),
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (response.ok) console.log(successMessage);
+        else throw new Error(`HTTP error! status: ${response.status}`);
 
         return response.json();
     } catch (error) {
-        console.error('Error fetching JSON::', error);
+        console.error("Error fetching JSON::", error);
     }
 }
 
-async function putData(resource, requestBody) {
+async function putData(resource, requestBody, successMessage) {
     try {
         const response = await fetch(`${resource}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
             body: JSON.stringify(requestBody),
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (response.ok) console.log(successMessage);
+        else throw new Error(`HTTP error! status: ${response.status}`);
 
         return response.json();
     } catch (error) {
-        console.error('Error fetching JSON::', error);
+        console.error("Error fetching JSON::", error);
     }
 }
 
-async function deleteData(resource) {
+async function deleteData(resource, successMessage) {
     try {
         const response = await fetch(`${resource}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+            },
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (response.ok) console.log(successMessage);
+        else throw new Error(`HTTP error! status: ${response.status}`);
 
         return response.json();
     } catch (error) {
-        console.error('Error fetching JSON::', error);
+        console.error("Error fetching JSON::", error);
     }
 }

@@ -3,7 +3,9 @@ package com.happyfit.happyfit.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.happyfit.happyfit.models.enums.FoodPortionEnum;
 
 import jakarta.persistence.CascadeType;
@@ -15,99 +17,46 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
-@Table(name = "foodOptions")
+@Table(name = "foodOption_table")
 public class FoodOption {
     @Id
     @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer foodOptionsId;
+    private Integer id;
 
     @Column(length = 100, nullable = false)
-    private String foodName;
+    private String name;
 
     @Column
-    private Float foodCalories;
+    private Float calories;
 
     @Column
-    private Float foodProteins;
+    private Float proteins;
 
     @Column
-    private Float foodCarbs;
+    private Float carbs;
 
     @Column
-    private Float foodFats;
+    private Float fats;
 
     @Column(length = 100, nullable = false)
-    private FoodPortionEnum foodPortion;
+    private FoodPortionEnum portion;
 
     @OneToMany(mappedBy = "foodOption", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    private List<UserFood> userFood = new ArrayList<>();
+    private List<Food> foods = new ArrayList<Food>();
 
-    public Integer getFoodOptionsId() {
-        return foodOptionsId;
-    }
-
-    public void setFoodOptionsId(Integer foodOptionsId) {
-        this.foodOptionsId = foodOptionsId;
-    }
-
-    public String getFoodName() {
-        return foodName;
-    }
-
-    public void setFoodName(String foodName) {
-        this.foodName = foodName;
-    }
-
-    public Float getFoodCalories() {
-        return foodCalories;
-    }
-
-    public void setFoodCalories(Float foodCalories) {
-        this.foodCalories = foodCalories;
-    }
-
-    public Float getFoodProteins() {
-        return foodProteins;
-    }
-
-    public void setFoodProteins(Float foodProteins) {
-        this.foodProteins = foodProteins;
-    }
-
-    public Float getFoodCarbs() {
-        return foodCarbs;
-    }
-
-    public void setFoodCarbs(Float foodCarbs) {
-        this.foodCarbs = foodCarbs;
-    }
-
-    public Float getFoodFats() {
-        return foodFats;
-    }
-
-    public void setFoodFats(Float foodFats) {
-        this.foodFats = foodFats;
-    }
-
-    public FoodPortionEnum getFoodPortion() {
-        return foodPortion;
-    }
-
-    public void setFoodPortion(FoodPortionEnum foodPortion) {
-        this.foodPortion = foodPortion;
-    }
-
-    public List<UserFood> getUserFood() {
-        return userFood;
-    }
-
-    public void setUserFood(List<UserFood> userFood) {
-        this.userFood = userFood;
-    }
-
-    
+    @OneToMany(mappedBy = "foodOption", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Food> ingredients = new ArrayList<Food>();
 }

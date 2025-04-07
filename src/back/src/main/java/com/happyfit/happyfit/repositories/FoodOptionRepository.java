@@ -9,5 +9,5 @@ import com.happyfit.happyfit.models.FoodOption;
 
 @Repository
 public interface FoodOptionRepository extends JpaRepository<FoodOption, Integer> {
-    List<FoodOption> findByFoodName(String foodName);
+    List<FoodOption> findByName(String name);
 }

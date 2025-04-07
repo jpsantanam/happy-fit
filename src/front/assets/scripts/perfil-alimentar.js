@@ -1,128 +1,129 @@
-const apiURL = `${API_URL}`;
+let profileUserId;
 
-document.addEventListener('DOMContentLoaded', function () {
-	// verifica se o selectedUserId está no localStorage
-    // const selectedUserId = localStorage.getItem('selectedUserId');
-    // let userId;
-    // if (selectedUserId) {
-    //     userId = selectedUserId;
-    // } else {
-    //     // Se não estiver no localStorage, obter userId do usuário comum
-    //     const userData = JSON.parse(localStorage.getItem('loggedUser'));
-    //     userId = userData.id;
-    // }
-	const carousel = new bootstrap.Carousel(document.getElementById('cadastroCarrossel'), { interval: false, wrap: false });
+if (userData.role == "USER")
+    profileUserId = userData.id;
+else if (userData.role == "NUTRITIONIST")
+    profileUserId = parseInt(localStorage.getItem('selectedUserId'));
 
-	document.getElementById("account-button").addEventListener("click", () => {
-		menuToggle();
-	});
+const apiURL = `${API_URL}/user/${profileUserId}`;
 
-	const form = document.getElementById("user-profile");
 
-	form.addEventListener("submit", async (event) => {
-		event.preventDefault();
-		event.stopPropagation();
+var currentTab = 0;
+showTab(currentTab);
 
-		if (form.checkValidity()) {
-			const peso = document.getElementById('peso').value;
-			const altura = document.getElementById('altura').value;
-			const idade = document.getElementById('idade').value;
-			const sexo = document.getElementById('sexo').value;
-			const cintura = document.getElementById('cintura').value;
-			const quadril = document.getElementById('quadril').value;
-			const pescoco = document.getElementById('pescoco').value;
-			const objetivos = document.getElementById('objetivos').value;
-			const fuma = document.getElementById('fuma').value;
-			const bebe = document.getElementById('bebe').value;
-			const cirurgia = document.getElementById('cirurgia').value;
-			const doencaCronica = document.getElementById('doenca-cronica').value;
-			const dorCronica = document.getElementById('dor-cronica').value;
-			const naf = document.getElementById('naf').value;
+function showTab(n) {
+	var x = document.getElementsByClassName("tab");
+	x[n].style.display = "block";
+	if (n == 0) {
+		document.getElementById("prevBtn").style.display = "none";
+	} else {
+		document.getElementById("prevBtn").style.display = "inline";
+	}
+	if (n == (x.length - 1)) {
+		document.getElementById("nextBtn").innerHTML = "Enviar";
+	} else {
+		document.getElementById("nextBtn").innerHTML = "Próximo";
+	}
+	fixStepIndicator(n);
+}
 
-			const requestBody = {
-				height: altura,
-				weight: peso,
-				age: idade,
-				gender: sexo,
-				hip: quadril,
-				waist: cintura,
-				neck: pescoco,
-				currentGoal: objetivos,
-				smokes: fuma,
-				drinks: bebe,
-				hadSurgeries: cirurgia,
-				hasDiseases: doencaCronica,
-				hasPain: dorCronica,
-				pal: naf,
-			};
+function nextPrev(n) {
+	var x = document.getElementsByClassName("tab");
+	if (n == 1 && !validateForm()) return false;
+	x[currentTab].style.display = "none";
+	currentTab = currentTab + n;
+	if (currentTab >= x.length) {
+		submitForm();
+		return false;
+	}
+	showTab(currentTab);
+}
 
-			postData(`${apiURL}/profile`, requestBody).then((data) => {
-				console.log('Successfully posted new profile to the database');
-				console.log(data);
-
-				const _requestBody = {
-					totalCalories: 0,
-					totalProteins: 0,
-					totalCarbs: 0,
-					totalFats: 0
-				};
-
-				postData(`${apiURL}/diet`, _requestBody).then((data) => {
-					console.log('Successfully posted new diet to the database');
-					console.log(data);
-					localStorage.setItem('loggedUser', JSON.stringify(data));
-					alert("Perfil alimentar cadastrado com sucesso.");
-					window.location.href = 'dieta.html';
-/* 
-					const _requestBody = JSON.stringify({
-						date = new Date(),
-						totalCalories: 0,
-						totalProteins: 0,
-						totalCarbs: 0,
-						totalFats: 0
-					});
-
-					postData(`${apiURL}/diary`, _requestBody).then((data) => {
-						console.log('Successfully posted new diary to the database');
-						console.log(data);
-					}).catch((error) => {
-						console.error('Error while posting new diary:', error);
-					});
-*/
-				}).catch((error) => {
-					console.error('Error while posting new diet:', error);
-				});
-			}).catch((error) => {
-				console.error('Error while posting new profile:', error);
-			});
-
+function validateForm() {
+	var x, y, i, valid = true;
+	x = document.getElementsByClassName("tab");
+	y = x[currentTab].getElementsByTagName("input");
+	for (i = 0; i < y.length; i++) {
+		if (y[i].value == "") {
+			y[i].className += " invalid";
+			valid = false;
 		} else {
-			form.classList.add('was-validated');
-			const invalidFields = form.querySelectorAll(':invalid');
-			const firstInvalidField = invalidFields[0];
-			const invalidFieldIndex = Array.prototype.indexOf.call(form, firstInvalidField);
-		}
-	});
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-
-	const carousel = new bootstrap.Carousel(document.getElementById('cadastroCarrossel'), { wrap: false });
-
-	document.getElementById('cadastroCarrossel').addEventListener('slide.bs.carousel'), function (e) {
-		event.preventDefault()
-		const active = e.relatedTarget;
-		if (active.classList.contains('carousel-item')) {
-			if (active === this.firstElementChild) {
-				document.querySelector('.carousel-control-prev').classList.add('d-none');
-				document.querySelector('.carousel-control-next').classList.remove('d-none');
-			} else if (active === this.lastElementChild) {
-				document.querySelector('.carousel-control-next').classList.add('d-none');
-				document.querySelector('.carousel-control-prev').classList.remove('d-none');
-			} else {
-				document.querySelector('.carousel-control-prev').classList.remove('d-none');
-				document.querySelector('.carousel-control-next').classList.remove('d-none');
-			}
+			y[i].className = y[i].className.replace(" invalid", "");
 		}
 	}
-});
+	y = x[currentTab].getElementsByTagName("select");
+	for (i = 0; i < y.length; i++) {
+		if (y[i].value == "") {
+			y[i].className += " invalid";
+			valid = false;
+		} else {
+			y[i].className = y[i].className.replace(" invalid", "");
+		}
+	}
+	if (valid) {
+		document.getElementsByClassName("step")[currentTab].className += " finish";
+	}
+	return valid;
+}
+
+function fixStepIndicator(n) {
+	var i, x = document.getElementsByClassName("step");
+	for (i = 0; i < x.length; i++) {
+		x[i].className = x[i].className.replace(" active", "");
+	}
+	x[n].className += " active";
+}
+
+function submitForm() {
+	const form = document.getElementById("user-profile");
+
+	if (form.checkValidity()) {
+		const requestBody = {
+			weight: document.getElementById('peso').value,
+			height: document.getElementById('altura').value,
+			age: document.getElementById('idade').value,
+			gender: document.getElementById('sexo').value,
+			waist: document.getElementById('cintura').value,
+			hip: document.getElementById('quadril').value,
+			neck: document.getElementById('pescoco').value,
+			currentGoal: document.getElementById('objetivos').value,
+			pal: document.getElementById('frequencia').value
+		};
+
+		postData(`${apiURL}/profile`, requestBody, 'Successfully posted new profile to the database').then((data) => {
+			console.log(data);
+
+			userData.profile = data;
+
+			const _requestBody = {
+				totalCalories: 0,
+				totalProteins: 0,
+				totalCarbs: 0,
+				totalFats: 0
+			};
+
+			postData(`${apiURL}/diet`, _requestBody, 'Successfully posted new diet to the database').then((_data) => {
+				console.log(_data);
+
+				userData.diet = _data;
+
+				alert("Perfil alimentar cadastrado com sucesso.");
+
+				if (userData.role == "USER") {
+					localStorage.setItem('loggedUser', JSON.stringify(userData));
+					window.location.href = 'dieta.html';
+				} else if (userData.role == "NUTRITIONIST") window.location.href = 'gerencia-clientes.html';
+
+			}).catch((error) => {
+				console.error('Error while posting new diet:', error);
+			});
+		}).catch((error) => {
+			console.error('Error while posting new profile:', error);
+		});
+	} else {
+		form.classList.add('was-validated');
+		const invalidFields = form.querySelectorAll(':invalid');
+		const firstInvalidField = invalidFields[0];
+		firstInvalidField.focus();
+	}
+}

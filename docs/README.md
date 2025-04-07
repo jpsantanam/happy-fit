@@ -8,7 +8,7 @@
 
 **Matheus Caetano Rocha, matheuscaetanorocha@gmail.com**
 
-**Rafael Caetano Rocha, rafael.caeta663@gmail.com**
+**Rafael Caetano da Silva, rafael.caeta663@gmail.com**
 
 ---
 
@@ -27,8 +27,11 @@ _Instituto de Informática e Ciências Exatas – Pontifícia Universidade Cató
 
 ---
 
-_**Resumo**. Escrever aqui o resumo. O resumo deve contextualizar rapidamente o trabalho, descrever seu objetivo e, ao final, 
-mostrar algum resultado relevante do trabalho (até 10 linhas)._
+_**Resumo**._
+
+_Na sociedade moderna, a busca por um estilo de vida saudável e esteticamente agradável está em crescimento. A tecnologia democratizou o acesso à informação sobre nutrição, com plataformas online e aplicativos que facilitam o aprendizado sobre macronutrientes. Foi com o objetivo de ajudar pessoas interessadas em alcançar uma vida e forma mais saudáveis que surgiu a ideia do HappyFit._
+
+_A aplicação tem como principal funcionalidade o controle de dietas, com maior enfoque nos macronutrientes. A interface é voltada para três principais tipos de usuários: o usuário que sabe controlar sua própria alimentação e já tem uma base sobre macronutrientes, o usuário que não tem noção de como controlar sua dieta, e o nutricionista, que irá auxiliar o usuário inexperiente a obter esse controle._
 
 ---
 
@@ -173,11 +176,8 @@ No geral, cada aplicativo tem funcionalidades únicas, mas o que podemos notar �
 
 O site permitirá a criação e o gerenciamento rápidos e intuitivos de dietas, refeições e alimentos. O usuário cadastrará os alimentos consumidos ao longo das refeições e a aplicação fornecerá um feedback em tempo real sobre a adequação da dieta aos objetivos do usuário, levando em conta as metas de calorias e macronutrientes estabelecidas.
 
-O sistema também atuará como plataforma de compartilhamento de receitas. O usuário terá a opção de cadastrar suas próprias receitas no site e outros usuários poderão pesquisar por receitas. Ao escolher uma receita, o usuário poderá avaliar, comentar, favoritar e marcar a receita como feita.
+O sistema também atuará como plataforma de compartilhamento de receitas. O usuário terá a opção de cadastrar suas próprias receitas no site e outros usuários poderão ver outras receitas e favorita-las.
 
-Além de gerenciamento de dietas e compartilhamento de receitas, o site também terá funcionalidades voltadas para acompanhamento do usuário nas atividades voltadas ao bem-estar, como cumprimento das dietas e de exercícios físicos. O sistema terá pesquisas e questionários para entendimento dos objetivos e necessidades do usuário.
-
-Para aumentar o engajamento entre os usuários da plataforma, teremos também diversos forúns para comunicação dos usuários. Cada forúm terá um tema diferente e será focado no compartilhamento de experiências dos usuários.
 
 ### 3.3. Modelagem dos processos
 
@@ -215,26 +215,16 @@ A sessão a seguir apresenta a descrição do produto de software desenvolvido.
 
 ## 7. Conclusão
 
-_Apresente aqui a conclusão do seu trabalho. Discussão dos resultados obtidos no trabalho, onde se verifica as observações pessoais de cada aluno. Poderá também apresentar sugestões de novas linhas de estudo._
+_Com o término das sprints e, consequentemente, do desenvolvimento do software, podemos concluir que a ideia inicial de criar um sistema para controle de alimentação com foco em macronutrientes foi um grande sucesso. Este software é capaz de auxiliar diversas pessoas com metas e necessidades nutricionais variadas. A implementação bem-sucedida de todos os processos propostos no início do projeto garante que os usuários desfrutem de uma experiência completa e positiva._
 
-# REFERÊNCIAS
+_O HappyFit é um software eficiente para controle de dietas focadas em macronutrientes. Ele permite a criação de dietas personalizadas, monitoramento de refeições, e acesso a uma biblioteca de receitas. Com uma interface intuitiva e ferramentas visuais, facilita a compreensão do progresso. Suporta a interação entre usuários e nutricionistas, incentivando engajamento e compartilhamento. O design user-friendly e as funcionalidades robustas tornam o HappyFit uma excelente ferramenta tanto para amadores quanto para profissionais de nutrição._
 
-_Como um projeto de software não requer revisão bibliográfica, a inclusão das referências não é obrigatória. No entanto, caso você deseje incluir referências relacionadas às tecnologias, padrões, ou metodologias que serão usadas no seu trabalho, relacione-as de acordo com a ABNT._
+_Durante a execução do projeto de software, todos os membros da equipe puderam aplicar os conhecimentos adquiridos nos dois primeiros períodos do curso de Engenharia de Software da PUC-MG. A utilização de um banco de dados pela primeira vez, especialmente com o uso do Spring Boot, foi um grande desafio. No entanto, com bastante auxílio dos professores e trabalho em equipe, conseguimos superar os principais obstáculos. Analisando o desempenho individual, concluímos que o sucesso do projeto se deve ao trabalho colaborativo, discussões contínuas, sugestões de ideias e boa convivência, resultando na alta qualidade do software desenvolvido._
 
-_Verifique no link abaixo como devem ser as referências no padrão ABNT:_
-
-http://portal.pucminas.br/imagedb/documento/DOC_DSC_NOME_ARQUI20160217102425.pdf
-
-**[1.1]** - _ELMASRI, Ramez; NAVATHE, Sham. **Sistemas de banco de dados**. 7. ed. São Paulo: Pearson, c2019. E-book. ISBN 9788543025001._
-
-**[1.2]** - _COPPIN, Ben. **Inteligência artificial**. Rio de Janeiro, RJ: LTC, c2010. E-book. ISBN 978-85-216-2936-8._
-
-**[1.3]** - _CORMEN, Thomas H. et al. **Algoritmos: teoria e prática**. Rio de Janeiro, RJ: Elsevier, Campus, c2012. xvi, 926 p. ISBN 9788535236996._
-
-**[1.4]** - _SUTHERLAND, Jeffrey Victor. **Scrum: a arte de fazer o dobro do trabalho na metade do tempo**. 2. ed. rev. São Paulo, SP: Leya, 2016. 236, [4] p. ISBN 9788544104514._
-
-**[1.5]** - _RUSSELL, Stuart J.; NORVIG, Peter. **Inteligência artificial**. Rio de Janeiro: Elsevier, c2013. xxi, 988 p. ISBN 9788535237016._
-
+_Além disso listamos alguns campos que podem ser explorados para a extensibilidade  e melhora do sistema:_
+- _Integração com Dispositivos de Saúde: A integração com dispositivos de monitoramento de saúde, como smartwatches e balanças inteligentes, pode fornecer dados adicionais e melhorar o acompanhamento nutricional._
+- _Expansão de Funcionalidades: Desenvolver funcionalidades adicionais, como planos de exercícios físicos personalizados e acompanhamento de saúde mental, pode proporcionar uma abordagem mais holística à saúde dos usuários._
+- _Análise de Dados: Utilizar ferramentas avançadas de análise de dados para oferecer insights sobre tendências alimentares e comportamentais dos usuários, ajudando nutricionistas a tomar decisões mais informadas._
 
 
 # APÊNDICES
@@ -253,10 +243,10 @@ _Atualizar os links e adicionar novos links para que a estrutura do código este
 ## Apêndice B - Apresentação final
 
 
-[Slides da apresentação final](presentations/)
+[Slides da apresentação final](slides/HappyFit%20-%20Apresentação%20Final.pdf)
 
 
-[Vídeo da apresentação final](video/)
+[Vídeo da apresentação final](../divulge/video/HappyFit%20Pitch.mp4)
 
 
 

@@ -2,12 +2,16 @@
 
 :root{
     /*Paleta de Cores*/
-    --vermelho: #FE5E48;
-    --azul: #5CCAC4;
-    --branco: #FEF9E6;
+    --principal: #FEF9E6;
+    --secundaria: #02232C;
     --preto: #333;
+    --azul: #5CCAC4;
+    --vermelho: #FE5E48;
+    
+
     /*Tipografia*/
     --font-family: "Quicksand", sans-serif;
+
     /*--elemento-atributo-plataforma(d = desktop|m = mobile)*/
     --title-weight: <600>;
     --titleG-size-d: 2.5rem;
@@ -66,7 +70,6 @@ a.btn {
 }
 
 section {
-    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -109,10 +112,21 @@ nav {
     background-color: var(--azul);
     border-color: var(--azul);
 }
+
+.btn-modal{
+    background-color: var(--secundaria);
+    color: var(--principal);
+}
+
+.btn-modal:hover{
+    background-color: var(--azul);
+    color: var(--principal);
+}
 /*FIM HEADER*/
 /*INICIO*/
 section.inicio {
-    height: calc(100vh - 106px);
+    padding: 20px;
+    min-height: calc(100vh - 106px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -124,17 +138,22 @@ a.btn-outline-light:hover {
     background-color: var(--azul);
 }
 /*FIM INICIO*/
+
+.dev {
+    padding: 40px 0;
+}
+
 /*CARD DESENVOLVEDORES*/
 .card {
     background-color: transparent;
 }
 
 .card img {
-    width: 100%;
+    width: 80%;
 }
 
 .sociais i {
-    color: var(--branco);
+    color: var(--secundaria);
     font-size: var(--titleP-size-d);
     padding: 5px;
 }
@@ -158,7 +177,7 @@ a.btn-outline-light:hover {
         font-size: var(--link-size-m);
     }
     section.inicio {
-        height: calc(100vh - 109.59px);
+        min-height: calc(100vh - 110px);
         text-align: center;
     }
     section.inicio p {

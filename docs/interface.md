@@ -5,30 +5,69 @@ _Visão geral da interação do usuário por meio das telas do sistema. Apresent
 
 ## 6.1. Tela principal do sistema
 
-_Descrição da tela principal do sistema._
+![`Tela principal do sistema`](images/tela-inicial.png)
 
-[`Tela principal do sistema`](images/)
+## 6.2. Telas do processo 1 - Login de Usuário
+
+_Login de Usuário_
+
+![`Tela da atividade 1`](images/Tela-login.png)
+
+_Cadastro de usuário._
+
+![`Tela da atividade 2`](images/tela-cadastro%20-usuário.png)
+
+_Ver perfil de usuário._
+
+![`Tela da atividade 2`](images/tela-perfil.png)
 
 
-## 6.2. Telas do processo 1
+## 6.3. Telas do processo 2 - Cadastro de perfil alimentar
 
-_Descrição da tela relativa à atividade 1._
+_Cadastro do perfil alimentar._
 
-[`Tela da atividade 1`](images/)
+![`Tela da atividade 1.1`](images/tela-perfil-alimentar-1.png)
+![`Tela da atividade 1.2`](images/tela-perfil-alimentar-2.png)
+![`Tela da atividade 1.3`](images/tela-perfil-alimentar-3.png)
+![`Tela da atividade 1.4`](images/tela-perfil-alimentar-4.png)
 
-_Descrição da tela relativa à atividade 2._
+_Gerenciamento de cliente nutricionista_
 
-[`Tela da atividade 2`](images/)
+![`Tela da atividade 2.1`](images/tela-gerencia-de-atendimento-nutricionista.png)
+![`Tela da atividade 2.2`](images/tela-gerencia-de-atendimento-nutricionista%202.png)
 
 
-## 6.3. Telas do processo 2
+## 6.4. Telas do processo 3 - Gerenciamento de dietas
 
-_Descrição da tela relativa à atividade 1._
+_Gerenciamento de dietas._
+![`Tela da atividade 1`](images/tela-dieta.png)
 
-[`Tela da atividade 1`](images/)
+## 6.5. Telas do processo 4 - Diário Alimentar
 
-_Descrição da tela relativa à atividade 2._
+_Diário alimentar._
 
-[`Tela da atividade 2`](images/)
+![`Tela da atividade 1`](images/tela-diario.png)
+
+## 6.6. Telas do processo 5 - Comparação de calorias e macros
+
+_Comparação calorias e macros._
+
+![`Tela da atividade 1`](images/tela-comparacao-calorias-macros.png)
+
+## 6.7. Telas do processo 6 - Dietas
+
+_Gerenciar Dietas._
+
+![`Tela da atividade 1`](images/tela-comparacao-calorias-macros.png)
+
+## 6.8. Telas do processo 7 - Receitas
+
+_Criar Receita._
+
+![`Tela da atividade 1`](images/tela-receitas2.jpeg)
+
+_Ver receitas._
+![`Tela da atividade 2`](images/tela-receita1.png)
+
 
 

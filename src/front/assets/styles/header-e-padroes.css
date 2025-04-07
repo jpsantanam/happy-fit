@@ -2,12 +2,16 @@
 
 :root{
     /*Paleta de Cores*/
-    --vermelho: #FE5E48;
-    --azul: #5CCAC4;
-    --branco: #FEF9E6;
+    --principal: #FEF9E6;
+    --secundaria: #02232C;
     --preto: #333;
+    --azul: #5CCAC4;
+    --vermelho: #FE5E48;
+    
+
     /*Tipografia*/
     --font-family: "Quicksand", sans-serif;
+
     /*--elemento-atributo-plataforma(d = desktop|m = mobile)*/
     --title-weight: <600>;
     --titleG-size-d: 2.5rem;
@@ -29,39 +33,39 @@
 }
 
 body {
-    background-color: var(--preto);
+    background-color: var(--principal);
 }
 
 label {
     font-family: var(--font-family);
     font-weight: var(--title-weight);
-    color: var(--branco);
+    color: var(--preto);
 }
 
 h1 {
     font-family: var(--font-family);
     font-weight: var(--title-weight);
     font-size: var(--titleG-size-d);
-    color: var(--branco);
+    color: var(--preto);
 }
 
 h2 {
     font-family: var(--font-family);
     font-weight: var(--title-weight);
     font-size: var(--titleM-size-d);
-    color: var(--branco);
+    color: var(--preto);
 }
 
 h3 {
     font-family: var(--font-family);
     font-weight: var(--title-weight);
     font-size: var(--titleP-size-d);
-    color: var(--branco); 
+    color: var(--preto); 
 }
 
 p {
     font-family: var(--font-family);
-    color: var(--branco);
+    color: var(--preto);
     padding: 10px 0;
     margin: 0;
 }
@@ -71,13 +75,13 @@ p {
 
 /*HEADER*/
 nav {
-    background-color: var(--preto);
+    background-color: var(--secundaria);
 }
 
 .nav-link {
     padding: 1em;
     font-family: var(--font-family);
-    color: var(--branco);
+    color: var(--principal);
 }
 
 .nav-link:hover {
@@ -90,11 +94,11 @@ nav {
 }
 
 .navbar-toggler {
-    background-color: var(--branco);
+    background-color: var(--principal);
 }
 
 .navbar-toggler-icon {
-    color: var(--branco);
+    color: var(--secundaria);
 }
 
 .logo {
@@ -105,6 +109,11 @@ nav {
 .btn-primary.cadastro {
     background-color: var(--azul);
     border-color: var(--azul);
+}
+
+.btn.login:hover {
+    background-color: var(--azul);
+    color: var(--principal);
 }
 /*FIM HEADER*/
 

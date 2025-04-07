@@ -2,11 +2,14 @@
 
 _O processo de compartilhamento de receitas proposto visa criar uma plataforma onde os usuários possam compartilhar suas próprias receitas e interagir com as receitas já publicadas. Uma oportunidade de melhoria para esse processo seria a incorporação de um algoritmo de recomendação, capaz de sugerir receitas relevantes de acordo com os interesses individuais de cada usuário. Isso tornaria a experiência de descoberta de novas receitas mais personalizada e atraente para os usuários._
 
-![PROCESSO 6](../images/compartilhamento-receitas.png "Modelo BPMN do Processo 6.")
+![PROCESSO 6](../images/receitas-final.png "Modelo BPMN do Processo 6.")
 
 
 #### Detalhamento das atividades
 
+#### Criar Receita:
+
+_**Criar Receita :** O usuário clica no botão pra criar sua receita._
 
 #### Cadastro de Receita:
 
@@ -30,48 +33,34 @@ _**Confirmação:** O usuário confirma a publicação da receita clicando no bo
 
 _**Armazenamento:** A receita é armazenada no banco de dados do aplicativo._
 
-#### Pesquisar Receita:
-
-_**Início:** O usuário digita o termo de pesquisa no campo de busca._
-
-_**Processamento da Pesquisa:** O aplicativo utiliza mecanismos de busca para encontrar receitas que correspondam ao termo pesquisado._
-
-_**Apresentação dos Resultados:** O aplicativo apresenta os resultados da pesquisa em uma lista ordenada por relevância._
-
-_**Seleção da Receita:** O usuário clica na receita desejada para visualizar seus detalhes._
-
-_**Termo de pesquisa:** O usuário digita o termo que deseja pesquisar, como nome da receita, ingrediente ou categoria._
 
 #### Interagir com receita:
 
 _**Visualização da Receita:** O usuário navega até a receita desejada e visualiza seus detalhes, incluindo nome, ingredientes, modo de preparo, rendimento, categoria e imagem._
 
-_**Interações:** O usuário pode interagir com a receita de diversas maneiras:_
-
-_**Avaliar:** O usuário pode avaliar a receita atribuindo a ela uma nota de 1 a 5 estrelas._
-
-_**Favoritar:** O usuário pode adicionar a receita à sua lista de favoritos para acessá-la facilmente posteriormente._
-
-_**Comentar:** O usuário pode deixar um comentário sobre a receita, compartilhando sua opinião ou experiência com o preparo._
-
-_**Feito:** O usuário pode marcar a receita como "feita" para indicar que já a preparou._
-
-_**Avaliar:** Atualiza a avaliação da receita com base na nota atribuída pelo usuário._
-
 _**Favoritar:** Adiciona a receita à lista de favoritos do usuário_
 
 
-
-**Atividade 1: Cadastro de Receita**
+**Atividade 1: Criar Receita**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
 | ---             | ---              |  ---           | ---               |
-| nome da receita | Caixa de Texto   |                |                   |
-| ingredientes    | Área de Texto    |                |                   |
-| modo de preparo | Área de texto    |                |                   |
-| rendimento      | Área de texto    |                |                   |
-| categoria       | Seleção Múltipla |                |                   |
-| imagem          | Imagem           |                |                   |
+| Criar Receita | Botão   |                |          default         |
+
+| **Comandos** |  **Destino**                                | **Tipo** |
+| ---          | ---                                         | ---      |
+| Criar Receita    | Direciona o usuario ao cadastro de receita       | default  |
+
+**Atividade 2: Cadastro de Receita**
+
+| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
+| ---             | ---              |  ---           | ---               |
+| nome da receita | Caixa de Texto   |  Não pode estar em branco, mínimo de 10 caracteres      |        (default)           |
+| ingredientes    | Seleçao múltipla   |       Pelo menos um ingrediente deve ser selecionado     |       (default)               |
+| modo de preparo | Área de texto    |  Não pode estar em branco, mínimo de 10 caracteres   |          (default)         |
+| rendimento      | Número | Deve ser maior q zero  |        (default)           |
+| categoria       | Caixa de Texto |   Não pode estar em branco, maximo de 20 caracteres             |          (default)         |
+| imagem          | Imagem           |  Formatos permitidos: JPG, PNG, máximo 5MB  |        (default)           |
 
 | **Comandos**         |  **Destino**                            | **Tipo** |
 | ---                  | ---                                     | ---      |
@@ -80,24 +69,12 @@ _**Favoritar:** Adiciona a receita à lista de favoritos do usuário_
 | Publicar             | publica a receita no feed               | default  |
 
 
-**Atividade 2: Pesquisar Receita**
-
-| **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
-
-| **Comandos**         |  **Destino**          | **Tipo**  |
-| ---                  | ---                   | ---       |
-| Pesquisar            | resultado da pesquisa | default   |
-| Selecionar receita   | detalhe da receita    | default   |
-
 **Atividade 3: Interagir com receita**
 
 | **Campo**       | **Tipo**         | **Restrições** | **Valor default** |
-| ---             | ---              | ---            | ---               |
+| ---             | ---              |  ---           | ---               |
+| Favoritar | Botão   |                |          default         |
 
 | **Comandos** |  **Destino**                                | **Tipo** |
 | ---          | ---                                         | ---      |
-| Avaliar      | atualiza avaliação da receita               | default  |
 | Favoritar    | adiciona receita a lista de favoritos       | default  |
-| Comentar     | comentário da receita                       | default  |
-| Feito        | adiciona receita a lista de receitas feitas | default  |

@@ -10,10 +10,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -21,6 +24,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.happyfit.happyfit.models.enums.RoleEnum;
 
 @AllArgsConstructor
@@ -60,15 +65,17 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    private UserProfile profile;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "goals_id", referencedColumnName = "id")
-    private UserGoals goals;
+    @EqualsAndHashCode.Exclude
+    private Profile profile;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "diet_id", referencedColumnName = "id")
-    private UserDiet diet;
+    @EqualsAndHashCode.Exclude
+    private Diet diet;
+
+    @OneToMany(mappedBy = "user")
+    @JsonProperty(access = Access.READ_WRITE)
+    private List<Diary> diaries = new ArrayList<Diary>();
 
     @ManyToOne
     @JoinColumn(name = "nutritionist_id")
@@ -78,4 +85,17 @@ public class User {
     @OneToMany(mappedBy = "nutritionist")
     @JsonManagedReference
     private List<User> clients = new ArrayList<User>();
+
+    @OneToMany(mappedBy = "creator")
+    @JsonManagedReference
+    private List<Recipe> recipes = new ArrayList<Recipe>();
+
+    @ManyToMany
+    @JoinTable(name = "favorite_recipes_table", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "recipe_id"))
+    @JsonManagedReference
+    private List<Recipe> favoriteRecipes = new ArrayList<Recipe>();
+
+    public Integer getNutritionistId() {
+        return (this.nutritionist != null) ? this.nutritionist.getId() : null;
+    }
 }

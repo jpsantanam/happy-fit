@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					</ul>
 				</div>
 				<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-					<a id="login-button" class="btn btn-outline-light me-md-2 expand-on-hover" type="button" href="login.html">Login</a>
+					<a id="login-button" class="btn login btn-outline-light me-md-2 expand-on-hover" type="button" href="login.html">Login</a>
 					<a id="register-button" class="btn btn-primary cadastro expand-on-hover" type="button" href="cadastro.html">Cadastro</a>
 				</div>
 				<div id="account" class="me-3">

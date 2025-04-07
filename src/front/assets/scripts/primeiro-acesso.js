@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (selectedMode === 'withNutritionist') {
             document.getElementById('mode-choice').classList.add("d-none");
             document.getElementById('nutricionist-chosen').classList.remove("d-none");
-            document.getElementById("show-id").textContent = userData.id;
+            document.getElementById("show-id").textContent = userData.email;
         }
     });
 });

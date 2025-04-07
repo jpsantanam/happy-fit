@@ -7,162 +7,46 @@ else if (userData.role == "NUTRITIONIST")
 
 const apiURL = `${API_URL}/user/${dietUserId}`;
 
+let editMode = false;
+
+let profile = {};
+let goal = {};
 let diet = {};
 let userMeals = [];
-let userFoods = [];
 let foodOptions = [];
+let docMeals = [];
 
-getData(`${apiURL}/diet`).then((data) => {
-    console.log('Successfully fetched diet data from the database');
-    diet = data;
-    console.log(diet);
-    userMeals = diet.meals;
-}).catch((error) => {
-    console.error('Error while fetching diet data:', error);
-});
-
-getData(`${API_URL}/foodOption`).then((response) => {
-    if (response.ok) {
-        console.log('Successfully fetched food options from the database');
-        foodOptions = response.json();
-    } else console.error('Error while fetching food options:', response.statusText);
-});
-
-function loadUserMeal (mealsList, meal, foods, uniqueFoodIdCounter) {
-    createMeal(mealsList, meal.id, meal.name);
-    meals.push(document.querySelector("#meals-list .meal:last-child"));
+function loadUserMeal (mealsList, meal, foods) {
+    createMeal(mealsList, `meal${meal.id}`, meal.name);
+    docMeals.push(document.querySelector("#meals-list .meal:last-child"));
 
     for (let food of foods) {
         const foodsList = document.getElementById(`meal${meal.id}`).querySelector(".foods-list");
-        addFood(foodsList, uniqueFoodIdCounter);
+        createFood(foodsList, `food${food.id}`);
 
-        const foodData = {
-            name : foodOptions[food.foodId - 1].foodName,
-            calories : foodOptions[food.foodId - 1].foodCalories,
-            proteins : foodOptions[food.foodId - 1].foodProteins,
-            carbs : foodOptions[food.foodId - 1].foodCarbs,
-            fats : foodOptions[food.foodId - 1].foodFats,
-            portion : foodOptions[food.foodId - 1].foodPortion,
-            quantity : food.quantity
-        };
-
-        const foodElement = document.getElementById(`food${uniqueFoodIdCounter}`);
+        const foodElement = document.getElementById(`food${food.id}`);
         foodElement.querySelector(".food-dropdown").classList.add("d-none");
-        finishFood (foodElement, uniqueFoodIdCounter, foodData);
-        uniqueFoodIdCounter++;
-    }
 
-    return uniqueFoodIdCounter;
-}
-
-async function saveNewMeal (mealID, mealName, foodsIDs, foodsQuantities) {
-    const requestBody = {
-        name: mealName,
-        diet: diet.id
-    };
-
-    postData(`${apiURL}/diet/meal`, requestBody).then((data) => {
-        console.log('Successfully posted new meal to the database');
-        console.log(data);
-    }).catch((error) => {
-        console.error('Error while posting new meal:', error);
-    });
-
-    for (let i = 0; i < foodsIDs.length; i++) {
-        /* let foods;
-
-        getData(`diet/meal/${mealID}`).then((data) => {
-            foods = data.foods;
-        }); */
-
-        const _requestBody = {
-            meal: parseInt(mealID),
-            quantity: parseFloat(foodsQuantities[i]),
-            foodOption: parseInt(foodsIDs[i]),
-        };
-
-        postData(`${apiURL}/diet/meal/${mealID}/food`, _requestBody).then((response) => {
-            console.log("Successfully posted new meal's foods to the database");
-            console.log(data);
-        }).catch((error) => {
-            console.error("Error while posting new meal's foods:", error);
-        });
-    }
-}
-
-async function updateMeal (mealID, mealName, foodsIDs, foodsQuantities) {
-    const requestBody = {
-        name: mealName,
-        diet: diet.id
-    };
-    
-    putData(`${apiURL}/diet/meal/${mealID}`, requestBody).then((data) => {
-        console.log('Successfully updated meal in the database');
-        console.log(data);
-    }).catch((error) => {
-        console.error("Error while updating meal:", error);
-    });
-
-    postData(`${apiURL}/diary`, _requestBody).then((data) => {
-        console.log('Successfully posted new diary to the database');
-        console.log(data);
-    }).catch((error) => {
-        console.error('Error while posting new diary:', error);
-    });
-
-    getData(`${apiURL}/diet/meal/${mealID}`).then((data) => {
-        console.log('Successfully fetched meal data from the database');
-        console.log(data);
-
-        for (let food of data.foods) {
-            deleteData(`${apiURL}/diet/meal/${mealID}/food/${food.id}`).then((_data) => {
-                console.log("Successfully deleted previous version of the meal on the database: ", _data);
-                console.log(_data);
-            }).catch((error) => {
-                console.error("Error while deleting previous meal's foods version:", error);
-            });
+        // Gambiarra pra resolver o problema de não conseguir retornar a msm foodOption duas vezes
+        if (typeof food.foodOption !== 'object' && food.foodOption !== null) {
+            food.foodOption = foodOptions.find((item) => item.id === food.foodOption);
         }
-    }).catch((error) => {
-        console.error('Error while posting meal data:', error);
-    });
 
-    for (let i = 0; i < foodsIDs.length; i++) {
-        getData(`${apiURL}/diet/meal/${mealID}/food`).then((data) => {
-            console.log('Successfully fetched food data from the database');
-            let foods = data;
-            console.log("'foods': ", foods);
-            console.log("'foods' size: ", foods.length - 1);
-
-            let _requestBody = {
-                meal: parseInt(mealID),
-                quantity: parseFloat(foodsQuantities[i]),
-                foodOption: parseInt(foodsIDs[i]),
-            };
-
-            postData(`${apiURL}/diet/meal/${mealID}/food`, _requestBody).then((_data) => {
-                console.log("Successfully posted updated meal's foods to the database");
-                console.log(_data);
-            }).catch((error) => {
-                console.error('Error while posting updated meal:', error);
-            });
-        }).catch((error) => {
-            console.error('Error while fetching food data:', error);
-        });
+        finishedFood (foodElement, `food${food.id}`, food.foodOption, food.quantity);
     }
 }
 
-// MODAL NÃO TÁ FUNCIONANDO!!!
-function createMeal (mealsList, uniqueMealIdCounter, mealName) {
+function createMeal (mealsList, mealId, mealName) {
     const meal = document.createElement("li");
     meal.className = "meal list-group-item";
-    meal.id = `meal${uniqueMealIdCounter}`;
+    meal.id = mealId;
     meal.innerHTML = `
     <input type="text" placeholder="Enter meal name" value="${mealName}" class="meal-title form-control-dark fs-3 text-black">
     <ul class="foods-list list-group w-100 mt-3">
         <!--Generated foods will be appended here-->
     </ul>
     <div class="d-flex justify-content-evenly w-100 mt-3">
-        <button class="edit-mode delete-meal btn btn-danger" data-toggle="modal" data-target="#deleteMealModal">Deletar Refeição</button>
+        <button class="edit-mode delete-meal btn btn-danger">Deletar Refeição</button>
         <button class="edit-mode add-food btn btn-dark">Adicionar Alimento</button>
         <button class="edit-mode save-meal btn btn-success">Salvar Refeição</button>
     </div>
@@ -189,18 +73,20 @@ function createMeal (mealsList, uniqueMealIdCounter, mealName) {
     </div>
     `;
     mealsList.appendChild(meal);
+
+    if (!editMode) meal.querySelectorAll(".edit-mode").forEach((item) => { item.classList.add("d-none"); });
 }
 
-function addFood (foodsList, uniqueFoodIdCounter) {
+function createFood (foodsList, foodId) {
     const food = document.createElement("li");
     food.className = "food container-fluid list-group-item list-group-item-dark p-4 rounded";
-    food.id = `food${uniqueFoodIdCounter}`;
+    food.id = foodId;
     food.innerHTML = `
     <div class="food-dropdown row">
         <div class="col-12 col-md-6 col-lg-8">
             <div class="food-options-dropdown dropdown col-12 col-sm-10 w-100">
-                <button class="edit-mode btn btn-secondary dropdown-toggle w-100" id="food-dropdown-button${uniqueFoodIdCounter}" data-bs-toggle="dropdown" aria-expanded="false">Opções de Alimentos
-                    <div class="dropdown-menu dropdown-menu-dark row" aria-labelledby="food-dropdown-button${uniqueFoodIdCounter}">
+                <button class="edit-mode btn btn-secondary dropdown-toggle w-100" id="${foodId}-dropdown-button" data-bs-toggle="dropdown" aria-expanded="false">Opções de Alimentos
+                    <div class="dropdown-menu dropdown-menu-dark row w-100" aria-labelledby="${foodId}-dropdown-button">
                         <div class="container-fluid">
                             <div class="food-options-row row">
                                 <!--Get options from foodData.json-->
@@ -230,18 +116,35 @@ function addFood (foodsList, uniqueFoodIdCounter) {
     foodsList.appendChild(food);
 
     const foodOptionsRow = food.querySelector(".food-options-row");
-    foodOptions.forEach(Food => {
-        const foodOptionsColumn = document.createElement("div");
-        foodOptionsColumn.className = "col-12 col-sm-6 col-lg-4 col-xl-3"
-        foodOptionsRow.appendChild(foodOptionsColumn);
-        const foodOption = document.createElement("a");
-        foodOption.className = "dropdown-item fs-6";
-        foodOption.textContent = Food.foodName;
-        foodOptionsColumn.appendChild(foodOption);
-    });
+    let foodOptionsArray = foodsList.querySelectorAll(".food-info-name");
+    if (foodOptionsArray.length === 0) {
+        foodOptions.forEach(foodOption => {
+            const foodOptionsColumn = document.createElement("div");
+            foodOptionsColumn.className = "col-12 col-sm-6 col-lg-4 col-xl-3"
+            foodOptionsRow.appendChild(foodOptionsColumn);
+            const foodOptionElement = document.createElement("a");
+            foodOptionElement.className = "dropdown-item fs-6";
+            foodOptionElement.textContent = foodOption.name;
+            foodOptionsColumn.appendChild(foodOptionElement);
+        });
+    } else {
+        foodOptions.forEach(foodOption => {
+            const foodOptionsArray = Array.from(foodsList.querySelectorAll(".food-info-name"));
+            const isDuplicate = foodOptionsArray.some(food => food.value.trim() === foodOption.name);
+            if (!isDuplicate) {
+                const foodOptionsColumn = document.createElement("div");
+                foodOptionsColumn.className = "col-12 col-sm-6 col-lg-4 col-xl-3"
+                foodOptionsRow.appendChild(foodOptionsColumn);
+                const foodOptionElement = document.createElement("a");
+                foodOptionElement.className = "dropdown-item fs-6";
+                foodOptionElement.textContent = foodOption.name;
+                foodOptionsColumn.appendChild(foodOptionElement);
+            }
+        });
+    }
 }
 
-function createFood (food, uniqueFoodIdCounter) {
+function createFoodOption (food, foodId) {
     const newFood = document.createElement("form");
     newFood.className = "new-food container-fluid needs-validation";
     newFood.setAttribute("novalidate", "");
@@ -250,31 +153,31 @@ function createFood (food, uniqueFoodIdCounter) {
         <div class="new-food-form col-12 col-lg-10">
             <div class="row">
                 <div class="col-12 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="new-food-name${uniqueFoodIdCounter}">Name:</label>
-                    <input class="form-control new-food-name" required type="text" id="new-food-name${uniqueFoodIdCounter}" placeholder="Food name">
+                    <label class="me-2" for="new-${foodId}-name">Name:</label>
+                    <input class="form-control new-food-name" required type="text" id="new-${foodId}-name" placeholder="Food name">
                 </div>
                 <div class="col-12 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="new-food-calories${uniqueFoodIdCounter}">Calorias:</label>
-                    <input class="form-control new-food-calories" required type="number" step=".01" id="new-food-calories${uniqueFoodIdCounter}" placeholder="In grams, only numbers">
+                    <label class="me-2" for="new-${foodId}-calories">Calorias:</label>
+                    <input class="form-control new-food-calories" required type="number" step=".01" min="0" id="new-${foodId}-calories" placeholder="In grams, only numbers">
                 </div>
                 <div class="col-12 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="new-food-proteins${uniqueFoodIdCounter}">Proteínas:</label>
-                    <input class="form-control new-food-proteins" required type="number" step=".01" id="new-food-proteins${uniqueFoodIdCounter}" placeholder="In grams, only numbers">
+                    <label class="me-2" for="new-${foodId}-proteins">Proteínas:</label>
+                    <input class="form-control new-food-proteins" required type="number" step=".01" min="0" id="new-${foodId}-proteins" placeholder="In grams, only numbers">
                 </div>
                 <div class="col-12 col-lg-4 d-flex align-items-center">
-                    <label for="new-food-carbs${uniqueFoodIdCounter}">Carboidratos:</label>
-                    <input class="form-control new-food-carbs" required type="number" step=".01" id="new-food-carbs${uniqueFoodIdCounter}" placeholder="In grams, only numbers">
+                    <label for="new-${foodId}-carbs">Carboidratos:</label>
+                    <input class="form-control new-food-carbs" required type="number" step=".01" min="0" id="new-${foodId}-carbs" placeholder="In grams, only numbers">
                 </div>
                 <div class="col-12 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="new-food-fats${uniqueFoodIdCounter}">Gorduras:</label>
-                    <input class="form-control new-food-fats" required type="number" step=".01" id="new-food-fats${uniqueFoodIdCounter}" placeholder="In grams, only numbers">
+                    <label class="me-2" for="new-${foodId}-fats">Gorduras:</label>
+                    <input class="form-control new-food-fats" required type="number" step=".01" min="0" id="new-${foodId}-fats" placeholder="In grams, only numbers">
                 </div>
                 <div class="col-12 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="new-food-portion${uniqueFoodIdCounter}">Porção:</label>
-                    <select class="form-select new-food-portion" required id="new-food-portion${uniqueFoodIdCounter}">
+                    <label class="me-2" for="new-${foodId}-portion">Porção:</label>
+                    <select class="form-select new-food-portion" required id="new-${foodId}-portion">
                         <option selected disabled>Selecione o tipo de porção</option>
-                        <option value="1">1 unidade</option>
-                        <option value="2">100 g</option>
+                        <option value="0">1 unidade</option>
+                        <option value="1">100 g</option>
                     </select>
                 </div>
             </div>
@@ -298,80 +201,9 @@ function createFood (food, uniqueFoodIdCounter) {
     food.appendChild(newFood);
 }
 
-async function submitNewFood (food, newFoodForm, uniqueFoodIdCounter) {
-    const foodName = newFoodForm.querySelector(".new-food-name").value;
-    const foodCalories = parseFloat(newFoodForm.querySelector(".new-food-calories").value);
-    const foodProteins = parseFloat(newFoodForm.querySelector(".new-food-proteins").value);
-    const foodCarbs = parseFloat(newFoodForm.querySelector(".new-food-carbs").value);
-    const foodFats = parseFloat(newFoodForm.querySelector(".new-food-fats").value);
-    const foodPortion = newFoodForm.querySelector(".new-food-portion").value;
+function finishedFood (food, foodId, foodData, foodQuantity) {
+    const portionPlaceholder = foodData.portion == "UNIDADE" ? "(Em unidades)" : "(Em gramas)";
 
-    const existingFood = foodOptions.find((item) => {
-        const itemName = item.foodName.toLowerCase().replace(/[\s-]/g, '');
-        return itemName === foodName.toLowerCase().replace(/[\s-]/g, '');;
-    });
-
-    if (existingFood) {
-        alert("Já existe um alimento com o mesmo nome no banco de dados.");
-
-        const inputFields = newFoodForm.querySelectorAll('input');
-        inputFields.forEach((input) => {
-            input.value = '';
-        });
-    }
-
-    else {
-        const requestBody = {
-            foodName,
-            foodCalories,
-            foodProteins,
-            foodCarbs,
-            foodFats,
-            foodPortion
-        };
-
-        postData(`${API_URL}/foodOption`, requestBody).then((data) => {
-            console.log('Successfully added new food option to database');
-            console.log(data);
-
-            foodOptions.push(requestBody);
-            console.log(foodOptions);
-/*             getData('http://localhost:8080/foodOption').then((_data) => {
-                console.log('Successfully fetched food options from the database');
-                foodOptions = _data;
-                console.log("foodOptions: ", foodOptions);
-            }).catch((error) => {
-                console.error("Error while fetching food options:", error);
-            });
-*/
-        }).catch((error) => {
-            console.error("Error while adding new food:", error);
-        });
-
-        const foodData = {
-            name : foodName,
-            calories : foodCalories,
-            proteins : foodProteins,
-            carbs : foodCarbs,
-            fats : foodFats,
-            portion : foodPortion,
-            quantity : ""
-        };
-
-        food.querySelector(".new-food").remove();
-        finishFood(food, uniqueFoodIdCounter, foodData);
-        uniqueFoodIdCounter++;
-    }
-}
-
-function finishFood (food, uniqueFoodIdCounter, foodData) {
-    let portionPlaceholder = "";
-    if (foodData.portion == "1") {
-        portionPlaceholder = "(Em unidades)";
-    }
-    else if (foodData.portion == "2") {
-        portionPlaceholder = "(Em gramas)";
-    }
     const foodInfo = document.createElement("form");
     foodInfo.className = "food-info container-fluid needs-validation";
     foodInfo.setAttribute("novalidate", "");
@@ -383,28 +215,28 @@ function finishFood (food, uniqueFoodIdCounter, foodData) {
                     <input value="${foodData.name}" class="food-info-name form-control" disabled type="text">
                 </div>
                 <div class="col-6 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="food-calories${uniqueFoodIdCounter}">Calorias:</label>
-                    <input value="${foodData.calories}" class="food-info-calories form-control" disabled type="number" step=".01" id="food-calories${uniqueFoodIdCounter}">
+                    <label class="me-2" for="${foodId}-calories">Calorias:</label>
+                    <input value="${foodData.calories}" class="food-info-calories form-control" disabled type="number" step=".01" id="${foodId}-calories">
                 </div>
                 <div class="col-6 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="food-proteins${uniqueFoodIdCounter}">Proteínas:</label>
-                    <input value="${foodData.proteins}" class="food-info-proteins form-control" disabled type="text" step=".01" id="food-proteins${uniqueFoodIdCounter}">
+                    <label class="me-2" for="${foodId}-proteins">Proteínas:</label>
+                    <input value="${foodData.proteins}" class="food-info-proteins form-control" disabled type="number" step=".01" id="${foodId}-proteins">
                 </div>
                 <div class="col-6 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="food-carbs${uniqueFoodIdCounter}">Carboidratos:</label>
-                    <input value="${foodData.carbs}" class="food-info-carbs form-control" disabled type="text" step=".01" id="food-carbs${uniqueFoodIdCounter}">
+                    <label class="me-2" for="${foodId}-carbs">Carboidratos:</label>
+                    <input value="${foodData.carbs}" class="food-info-carbs form-control" disabled type="number" step=".01" id="${foodId}-carbs">
                 </div>
                 <div class="col-6 col-lg-4 d-flex align-items-center">
-                    <label class="me-2" for="food-fats${uniqueFoodIdCounter}">Gorduras:</label>
-                    <input value="${foodData.fats}" class="food-info-fats form-control" disabled type="text" step=".01" id="food-fats${uniqueFoodIdCounter}">
+                    <label class="me-2" for="${foodId}-fats">Gorduras:</label>
+                    <input value="${foodData.fats}" class="food-info-fats form-control" disabled type="number" step=".01" id="${foodId}-fats">
                 </div>
             </div>
         </div>
         <div class="food-info-interactions col-12 col-lg-3">
             <div class="row">
                 <div class="col-7 col-lg-12 d-flex align-items-center">
-                    <label class="me-2" for="food-quantity${uniqueFoodIdCounter}">Quantidade:</label>
-                    <input class="food-info-quantity form-control" type="number" value="${foodData.quantity}" step=".01" id="food-quantity${uniqueFoodIdCounter}" placeholder="${portionPlaceholder}">
+                    <label class="me-2" for="${foodId}-quantity">Quantidade:</label>
+                    <input class="food-info-quantity form-control" type="number" value="${foodQuantity}" step=".01" min="0" id="${foodId}-quantity" placeholder="${portionPlaceholder}">
                 </div>
                 <button class="edit-mode delete-food col-5 col-lg-12 btn btn-danger" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -418,6 +250,11 @@ function finishFood (food, uniqueFoodIdCounter, foodData) {
     `;
     food.appendChild(foodInfo);
 
+    if (!editMode) {
+        foodInfo.querySelector(".food-info-quantity").disabled = true;
+        foodInfo.querySelector(".edit-mode").remove();
+    }
+
     const quantityInput = foodInfo.querySelector(".food-info-quantity");
 
     quantityInput.addEventListener("input", function() {
@@ -425,30 +262,15 @@ function finishFood (food, uniqueFoodIdCounter, foodData) {
         updateFoodInfo(food, foodInfo, quantity, foodData);
     });
 
-    //NÃO LEMBRO MAIS O QUE ESSAS DUAS LINHAS FAZEM
-    /* const initialQuantity = parseFloat(quantityInput.value) || 0;
-    updateFoodInfo(food, foodInfo, initialQuantity, foodData); */
+    const initialQuantity = parseFloat(quantityInput.value) || 0;
+    updateFoodInfo(food, foodInfo, initialQuantity, foodData);
 }
 
 function updateFoodInfo(food, foodInfo, quantity, foodData) {
-    let updatedCalories = 0;
-    let updatedProteins = 0;
-    let updatedCarbs = 0;
-    let updatedFats = 0;
-
-    if (foodData.portion == "1") {
-        updatedCalories = foodData.calories * quantity;
-        updatedProteins = foodData.proteins * quantity;
-        updatedCarbs = foodData.carbs * quantity;
-        updatedFats = foodData.fats * quantity;
-    }
-
-    else if (foodData.portion == "2") {
-        updatedCalories = (foodData.calories / 100) * quantity;
-        updatedProteins = (foodData.proteins / 100) * quantity;
-        updatedCarbs = (foodData.carbs / 100) * quantity;
-        updatedFats = (foodData.fats / 100) * quantity;
-    }
+    let updatedCalories = ((foodData.portion == "UNIDADE") ? foodData.calories : (foodData.calories / 100)) * quantity;
+    let updatedProteins = ((foodData.portion == "UNIDADE") ? foodData.proteins : (foodData.proteins / 100)) * quantity;
+    let updatedCarbs = ((foodData.portion == "UNIDADE") ? foodData.carbs : (foodData.carbs / 100)) * quantity;
+    let updatedFats = ((foodData.portion == "UNIDADE") ? foodData.fats : (foodData.fats / 100)) * quantity;
 
     const caloriesInput = foodInfo.querySelector(".food-info-calories");
     const proteinsInput = foodInfo.querySelector(".food-info-proteins");
@@ -475,9 +297,9 @@ function updateMealTotal(meal) {
     let totalMealCarbs = 0;
     let totalMealFats = 0;
 
-    const foodOptions = meal.querySelectorAll(".food-info");
+    const foodItems = meal.querySelectorAll(".food-info");
 
-    foodOptions.forEach((foodItem) => {
+    foodItems.forEach((foodItem) => {
         const mealCalories = parseFloat(foodItem.querySelector(".food-info-calories").value) || 0;
         const mealProteins = parseFloat(foodItem.querySelector(".food-info-proteins").value) || 0;
         const mealCarbs = parseFloat(foodItem.querySelector(".food-info-carbs").value) || 0;
@@ -498,23 +320,35 @@ function updateMealTotal(meal) {
     mealTotalCarbs.textContent = `${totalMealCarbs.toFixed(2)}g (${carbsPercentage}%)`;
     mealTotalFats.textContent = `${totalMealFats.toFixed(2)}g (${fatsPercentage}%)`;
 
-    updateTotal(meals);
+    updateDietTotal();
 }
 
-const meals = [];
+const getUserGoals = () => {
+    const caloriesGoal = goal.caloricIntake;
+    const proteinsGoal = goal.proteinIntake;
+    const carbsGoal = goal.carbIntake;
+    const fatsGoal = goal.fatIntake;
 
-function updateTotal(meals) {
+    return { caloriesGoal, proteinsGoal, carbsGoal, fatsGoal };
+};
+
+function updateDietTotal() {
     const calories = document.getElementById("calories");
     const proteins = document.getElementById("proteins");
     const carbs = document.getElementById("carbs");
     const fats = document.getElementById("fats");
+
+    const caloriesGoal = document.getElementById("calories-goal");
+    const proteinsGoal = document.getElementById("proteins-goal");
+    const carbsGoal = document.getElementById("carbs-goal");
+    const fatsGoal = document.getElementById("fats-goal");
 
     let totalCalories = 0;
     let totalProteins = 0;
     let totalCarbs = 0;
     let totalFats = 0;
 
-    meals.forEach((meal) => {
+    docMeals.forEach((meal) => {
         totalCalories += parseFloat(meal.querySelector(".meal-calories").textContent) || 0;
         totalProteins += parseFloat(meal.querySelector(".meal-proteins").textContent) || 0;
         totalCarbs += parseFloat(meal.querySelector(".meal-carbs").textContent) || 0;
@@ -528,53 +362,150 @@ function updateTotal(meals) {
         totalFats
     };
 
-    putData(`${apiURL}/diet`, requestBody).then((data) => {
-        console.log('Successfully updated diet in the database');
-        console.log(data);
+    putData(`${apiURL}/diet`, requestBody, 'Successfully updated diet in the database').then((data) => {
+        //console.log("Updated diet: ", data);
     }).catch((error) => {
         console.error("Error while updating diet:", error);
     });
 
     calories.textContent = `${totalCalories.toFixed(2)}kcal`;
-    proteins.textContent = `${totalProteins.toFixed(2)}g (${((totalProteins * 4 * 100) / totalCalories).toFixed(2)}%)`;
-    carbs.textContent = `${totalCarbs.toFixed(2)}g (${((totalCarbs * 4 * 100) / totalCalories).toFixed(2)}%)`;
-    fats.textContent = `${totalFats.toFixed(2)}g (${((totalFats * 9 * 100) / totalCalories).toFixed(2)}%)`;
+    proteins.textContent = `${totalProteins.toFixed(2)}g`;
+    carbs.textContent = `${totalCarbs.toFixed(2)}g`;
+    fats.textContent = `${totalFats.toFixed(2)}g`;
+    
+    const goalMacros = getUserGoals();
+    const dietMacros = {totalCalories, totalProteins, totalCarbs, totalFats};
+
+    const macrosDifference = compareGoals(goalMacros, dietMacros);
+
+    caloriesGoal.textContent = `${macrosDifference.calories}kcal`;
+    proteinsGoal.textContent = `${macrosDifference.proteins}g`;
+    carbsGoal.textContent = `${macrosDifference.carbs}g`;
+    fatsGoal.textContent = `${macrosDifference.fats}g`;
+    
+    caloriesGoal.style.color = getCaloriesDifferenceColor(macrosDifference.calories);
+    proteinsGoal.style.color = getProteinsDifferenceColor(macrosDifference.proteins);
+}
+
+function showToast(content, type) {
+    const delay = 3500;
+    const toastHtml = `
+    <div class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body h6 p-3 m-0">${content}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+    `;
+    const toastElement = htmlToElement(toastHtml);
+    const toastContainer = document.querySelector("#toast-container");
+    toastContainer.appendChild(toastElement);
+    const toast = new bootstrap.Toast(toastElement, {delay:delay, animation:true});
+    toast.show();
+    setTimeout(() => toastElement.remove(), delay + 1000);
+}
+
+function htmlToElement(toastHtml) {
+    const template = document.createElement('template');
+    toastHtml = toastHtml.trim();
+    template.innerHTML = toastHtml;
+    return template.content.firstChild;
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const mealsList = document.getElementById("meals-list");
 
-    let uniqueMealIdCounter;
-    let uniqueFoodIdCounter = 1;
+    //console.log("userData: ", userData);
 
-    if (userMeals.length > 0) {
-        for (let meal of userMeals) {
-            getData(`diet/meal/${meal.id}`).then((data) => {
-                console.log('Successfully fetched meal data from the database');
-                userFoods = data.foods;
-                console.log("userFoods: ", userFoods);
-                uniqueFoodIdCounter = loadUserMeal(mealsList, meal, userFoods, uniqueFoodIdCounter);
-            }).catch((error) => {
-                console.error("Error while fetching meal data:", error);
-            });
-        }
-        uniqueMealIdCounter = parseInt(userMeals[userMeals.length - 1].id + 1);
-    } else uniqueMealIdCounter = 1;
+    if (userData.role === "NUTRITIONIST" || (userData.role === "USER" && userData.nutritionistId === null)) {
+        editMode = true;
 
-    if (userData.role == "USER" && userData.nutritionist != null) {
-        document.querySelectorAll('.edit-mode').forEach((element) => {
-            element.classList.add('d-none');
+        document.getElementById("create-meal-button").addEventListener("click", () => {
+            createMeal(mealsList, `dummy-meal${document.querySelectorAll(".meal[id^='dummy-meal']").length + 1}`, "");
+            docMeals.push(document.querySelector("#meals-list .meal:last-child"));
         });
-    }
+    } else document.getElementById("create-meal").remove();
 
-    document.getElementById("create-meal-button").addEventListener("click", () => {
-        createMeal(mealsList, uniqueMealIdCounter, "");
-        meals.push(document.querySelector("#meals-list .meal:last-child"));
-        uniqueMealIdCounter++;
+    getData(`${API_URL}/foodOption`, 'Successfully fetched food options from the database').then((data) => {
+        foodOptions = data;
+        //console.log("foodOptions: ", foodOptions);
+    }).catch((error) => {
+        console.error('Error while fetching food options:', error);
     });
 
+    getData(`${apiURL}/profile`, 'Successfully fetched user profile data from the database').then((data) => {
+        //console.log("profile: ", profile);
+        profile = data;
+        goal = data.goal;
+    }).catch((error) => {
+        console.error('Error while fetching user profile data:', error);
+    });
+
+    const mealsList = document.getElementById("meals-list");
+
+    getData(`${apiURL}/diet`, 'Successfully fetched diet data from the database').then((data) => {
+        diet = data;
+        //console.log("diet: ", diet);
+
+        userMeals = diet.meals;
+        if (userMeals.length > 0) {
+            for (let meal of userMeals) {
+                mealFoods = meal.foods;
+                loadUserMeal(mealsList, meal, mealFoods);
+            }
+        }
+
+    }).catch((error) => {
+        console.error('Error while fetching diet data:', error);
+    });
+
+
+
     document.addEventListener("click", (event) => {
-        if (event.target.classList.contains("add-food")) {
+
+        if (event.target.closest("#diary-link")) {
+            if (userData.diaries.length == 0) {
+
+                event.preventDefault();
+
+                if (userMeals.length > 0) {
+
+                    const requestBody = {
+                        totalCalories: 0,
+                        totalProteins: 0,
+                        totalCarbs: 0,
+                        totalFats: 0
+                    };
+
+                    postData(`${apiURL}/diary`, requestBody, 'Successfully posted new diary to the database').then((data) => {
+                        //console.log("Posted diary: ", data);
+
+                        const mealPromises = userMeals.map((dietMeal) => {
+                            const _requestBody = {
+                                name: dietMeal.name,
+                                foods: []
+                            }
+
+                            console.log("dietMeal: ", dietMeal);
+
+                            return postData(`${apiURL}/diary/${data.id}/meal`,  _requestBody, 'Successfully posted new diary meal to the database').then((_data) => {
+                                //console.log("Posted diary meal: ", _data);
+                            }).catch((error) => {
+                                console.error('Error while posting new diary meal:', error);
+                            });
+                        });
+
+                        Promise.all(mealPromises).then(() => {
+                            window.location.href = event.target.href;
+                        });
+                    }).catch((error) => {
+                        console.error('Error while posting new diary:', error);
+                    });
+
+                } else alert("Você deve ter pelo menos uma refeição salva antes de acessar o diário.");
+            }
+        }
+
+        else if (event.target.classList.contains("add-food")) {
             const mealInput = event.target.closest(".meal").querySelector(".meal-title");
             const mealName = mealInput.value.trim();
             
@@ -584,41 +515,105 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 mealInput.style.border = "none";
                 const foodsList = event.target.closest(".meal").querySelector(".foods-list");
-                addFood(foodsList, uniqueFoodIdCounter);
-                uniqueFoodIdCounter++;
+                createFood(foodsList, `dummy-food${document.querySelectorAll(".food[id^='dummy-food']").length + 1}`);
             }
         }
 
         else if (event.target.classList.contains("save-meal")) {
-            const mealID = event.target.closest(".meal").id.replace('meal','');
-            const mealInput = event.target.closest(".meal").querySelector(".meal-title");
+            const meal = event.target.closest(".meal");
+            const mealInput = meal.querySelector(".meal-title");
             const mealName = mealInput.value.trim();
-            const foodsIDs = [];
-            for (let food of Array.from(event.target.closest(".meal").querySelectorAll(".food-info-name")).map(food => food.value.trim())) {
-                for (let foodItem of foodOptions) {
-                    if (food == foodItem.foodName)
-                        foodsIDs.push(foodItem.id);
-                }
-            }
-            const foodsQuantities = Array.from(event.target.closest(".meal").querySelectorAll(".food-info-quantity")).map(food => food.value.trim());
 
             if (!mealName) {
-                alert("Você deve inserir pelo menos um nome de refeição antes de salvá-la no banco de dados.");
-                mealInput.style.border = "1px solid red";
+                alert("Você deve inserir pelo menos um nome à refeição antes de salvá-la no banco de dados.");
+                mealInput.style.border = "2px solid red";
+                mealInput.addEventListener("input", function() {
+                    mealInput.style.border = "none";
+                });
             } else {
-                if (foodsIDs.length < 1 || foodsQuantities.length < 1) {
-                    alert("Você deve ter pelo menos um alimento na refeição antes de salvá-la no banco de dados.");
+                // verifica se o nome da refeição já existe
+                const existingMeal = userMeals.find((item) => {
+                    return item.name.toLowerCase() === mealName.toLowerCase();
+                });
+
+                if (existingMeal && existingMeal.id != meal.id.replace('meal', '')) {
+                    alert("Já existe uma refeição com o mesmo nome.");
+                    mealInput.style.border = "2px solid red";
+                    mealInput.addEventListener("input", function() {
+                        mealInput.style.border = "none";
+                    });
                 } else {
-                    let mealFound = false;
-                    for (let meal of userMeals) {
-                        if (meal.id == mealID) {
-                            mealFound = true;
-                            updateMeal(mealID, mealName, foodsIDs, foodsQuantities);
+                    let emptyQuantity = false;
+                    const foodData = Array.from(meal.querySelectorAll(".food-info")).map(food => {
+                        let foodOptionName = food.querySelector(".food-info-name").value.trim();
+                        let foodOption = foodOptions.find(food => food.name === foodOptionName).id;
+
+                        let quantity = food.querySelector(".food-info-quantity");
+                        if (quantity.value.trim() == "") {
+                            emptyQuantity = true;
+                            quantity.style.border = "2px solid red";
+                            quantity.addEventListener("input", function() {
+                                quantity.style.border = "none";
+                            });
+                        }
+                        quantity = parseFloat(quantity.value.trim());
+                        return { foodOption, quantity };
+                    });
+
+                    if (foodData.length < 1) {
+                        alert("Você deve ter pelo menos um alimento na refeição antes de salvá-la no banco de dados.");
+                    } else {
+                        if (emptyQuantity) alert("Todos os campos de 'Quantidade' devem estar preenchidos antes de salvar a refeição");
+                        else {
+                            const requestBody = {
+                                name: mealName,
+                                foods: foodData
+                            };
+
+                            if (meal.id.startsWith("dummy")) {
+                                postData(`${apiURL}/diet/meal`, requestBody, 'Successfully posted new meal to the database').then((data) => {
+                                    //console.log("Posted meal: ", data);
+                                    meal.id = `meal${data.id}`;
+                                    userMeals.push(data);
+                                    showToast(`Refeição "${mealName}" criada com sucesso`, "success");
+                                }).catch((error) => {
+                                    console.error('Error while posting new meal:', error);
+                                    showToast(`Erro ao criar refeição "${mealName}"`, "danger");
+                                });
+                            } else {
+                                putData(`${apiURL}/diet/meal/${meal.id.replace('meal', '')}`, requestBody, 'Successfully updated meal in the database').then((data) => {
+                                    //console.log("Updated meal: ", data);
+
+                                    const updatedMealIndex = userMeals.findIndex((item) => item.id === data.id);
+                                    if (updatedMealIndex !== -1) userMeals[updatedMealIndex] = data;
+
+                                    const updatedFoods = data.foods;
+                                    const foodElements = Array.from(document.querySelectorAll('.food')).filter(food => food.querySelector('.food-info'));
+                                    for (foodElement of foodElements) {
+                                        if (foodElement.id.includes("dummy")) {
+                                            const matchingFood = updatedFoods.find((food) => {
+                                                return food.foodOption.name === foodElement.querySelector(".food-info-name").value.trim();
+                                            });
+
+                                            if (matchingFood) {
+                                                foodElement.id = `food${matchingFood.id}`;
+                                                foodElement.querySelector(".food-info-calories").id = `food${matchingFood.id}-calories`;
+                                                foodElement.querySelector(".food-info-proteins").id = `food${matchingFood.id}-proteins`;
+                                                foodElement.querySelector(".food-info-carbs").id = `food${matchingFood.id}-carbs`;
+                                                foodElement.querySelector(".food-info-fats").id = `food${matchingFood.id}-fats`;
+                                                foodElement.querySelector(".food-info-quantity").id = `food${matchingFood.id}-quantity`;
+                                            }
+                                        }
+                                    }
+
+                                    showToast(`Refeição "${mealName}" atualizada com sucesso`, "success");
+                                }).catch((error) => {
+                                    console.error('Error while posting new meal:', error);
+                                    showToast(`Erro ao atualizar refeição "${mealName}"`, "danger");
+                                });
+                            }
                         }
                     }
-
-                    if (!mealFound)
-                        saveNewMeal(mealID, mealName, foodsIDs, foodsQuantities);
                 }
             }
         }
@@ -633,13 +628,8 @@ document.addEventListener("DOMContentLoaded", () => {
             let newFoodForm = food.querySelector(".new-food");
             event.target.closest(".food").querySelector(".food-dropdown").classList.add("d-none");
 
-            if (newFoodForm)
-                newFoodForm.classList.remove("d-none");
-
-            else {
-                createFood (food, uniqueFoodIdCounter);
-                uniqueFoodIdCounter++;
-            }
+            if (newFoodForm) newFoodForm.classList.remove("d-none");
+            else createFoodOption (food, food.id);
         }
 
         else if (event.target.classList.contains("confirm-new-food"))  {
@@ -649,7 +639,41 @@ document.addEventListener("DOMContentLoaded", () => {
             if (newFoodForm.checkValidity()) {
                 event.preventDefault();
                 event.stopPropagation();
-                submitNewFood(food, newFoodForm, uniqueFoodIdCounter);
+
+                const requestBody = {
+                    name: newFoodForm.querySelector(".new-food-name").value,
+                    calories: parseFloat(newFoodForm.querySelector(".new-food-calories").value),
+                    proteins: parseFloat(newFoodForm.querySelector(".new-food-proteins").value),
+                    carbs: parseFloat(newFoodForm.querySelector(".new-food-carbs").value),
+                    fats: parseFloat(newFoodForm.querySelector(".new-food-fats").value),
+                    portion: newFoodForm.querySelector(".new-food-portion").value
+                };
+
+                const existingFood = foodOptions.find((item) => {
+                    const itemName = item.name.toLowerCase().replace(/[\s-]/g, '');
+                    return itemName === requestBody.name.toLowerCase().replace(/[\s-]/g, '');
+                });
+
+                if (existingFood) {
+                    alert("Já existe um alimento com o mesmo nome no banco de dados.");
+
+                    const inputFields = newFoodForm.querySelectorAll('input');
+                    inputFields.forEach((input) => {
+                        input.value = '';
+                    });
+
+                } else {
+                    postData(`${API_URL}/foodOption`, requestBody, 'Successfully posted new food option to the database').then((data) => {
+                        //console.log("foodOption: ", data);
+
+                        requestBody.portion = requestBody.portion == "0" ? "UNIDADE" : "GRAMAS"; // Gambiarra pra exibir a porção direito
+                        foodOptions.push(data);
+                        food.querySelector(".new-food").remove();
+                        finishedFood(food, food.id, requestBody, "");
+                    }).catch((error) => {
+                        console.error("Error while adding new food:", error);
+                    });
+                }
 
             } else {
                 event.preventDefault();
@@ -663,26 +687,38 @@ document.addEventListener("DOMContentLoaded", () => {
             food.querySelector(".food-dropdown").remove();
 
             const selectedFoodName = event.target.textContent;
-            const selectedFoodItem = foodOptions.find((item) => item.foodName === selectedFoodName);
+            const selectedFoodItem = foodOptions.find((item) => item.name === selectedFoodName);
 
-            const foodData = {
-                name : selectedFoodItem.foodName,
-                calories : parseFloat(selectedFoodItem.foodCalories),
-                proteins : parseFloat(selectedFoodItem.foodProteins),
-                carbs : parseFloat(selectedFoodItem.foodCarbs),
-                fats : parseFloat(selectedFoodItem.foodFats),
-                portion : selectedFoodItem.foodPortion,
-                quantity : ""
-            };
+            finishedFood(food, food.id, selectedFoodItem, "");
+        }
 
-            finishFood(food, uniqueFoodIdCounter, foodData);
-            uniqueFoodIdCounter++;
+        else if (event.target.classList.contains("delete-meal")) {
+            const meal = event.target.closest(".meal");
+            if (meal) {
+                if (confirm("Tem certeza que deseja deletar essa refeição?")) {
+                    if (meal.id.startsWith("meal")) {
+                        const mealId = meal.id.replace('meal','');
+                        deleteData(`${apiURL}/diet/meal/${mealId}`, 'Successfully deleted meal in the database').then((data) => {
+                            //console.log("Deleted meal: ", data);
+                        }).catch((error) => {
+                            console.error("Error while deleting meal:", error);
+                        });
+                    }
+                    meal.remove();
+                    userMeals.splice(userMeals.indexOf(meal), 1);
+                    docMeals.splice(docMeals.indexOf(meal), 1);
+                    updateDietTotal();
+                }
+            }
         }
 
         else if (event.target.classList.contains("delete-food")) {
             const food = event.target.closest(".food");
-            if (food)
+            if (food) {
+                const meal = food.closest(".meal");
                 food.remove();
+                updateMealTotal(meal);
+            }
         }
     });
 });

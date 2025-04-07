@@ -22,9 +22,9 @@ public class FoodOptionService {
         return foodOptionRepository.findById(id).orElse(null);
     }
 
-    public List<FoodOption> getFoodOptionsByName(String foodName) {
-        String normalizedFoodName = foodName.toLowerCase();
-        return foodOptionRepository.findByFoodName(normalizedFoodName);
+    public List<FoodOption> getFoodOptionsByName(String name) {
+        String normalizedName = name.toLowerCase();
+        return foodOptionRepository.findByName(normalizedName);
     }
 
     public FoodOption saveFoodOption(FoodOption foodOption) {
@@ -37,12 +37,12 @@ public class FoodOptionService {
 
         FoodOption existingFoodOption = foodOptionRepository.findById(id).orElse(null);
         if (existingFoodOption != null) {
-            existingFoodOption.setFoodName(updatedFoodOption.getFoodName());
-            existingFoodOption.setFoodCalories(updatedFoodOption.getFoodCalories());
-            existingFoodOption.setFoodProteins(updatedFoodOption.getFoodProteins());
-            existingFoodOption.setFoodCarbs(updatedFoodOption.getFoodCarbs());
-            existingFoodOption.setFoodFats(updatedFoodOption.getFoodFats());
-            existingFoodOption.setFoodPortion(updatedFoodOption.getFoodPortion());
+            existingFoodOption.setName(updatedFoodOption.getName());
+            existingFoodOption.setCalories(updatedFoodOption.getCalories());
+            existingFoodOption.setProteins(updatedFoodOption.getProteins());
+            existingFoodOption.setCarbs(updatedFoodOption.getCarbs());
+            existingFoodOption.setFats(updatedFoodOption.getFats());
+            existingFoodOption.setPortion(updatedFoodOption.getPortion());
             
             return foodOptionRepository.save(existingFoodOption);
         } else {
@@ -55,23 +55,23 @@ public class FoodOptionService {
     }
 
     private void validateFoodOption(FoodOption foodOption) {
-        if (foodOption.getFoodName() == null || foodOption.getFoodName().isEmpty()) {
-            throw new IllegalArgumentException("O nome da comida não pode ser nulo ou vazio");
+        if (foodOption.getName() == null || foodOption.getName().isEmpty()) {
+            throw new IllegalArgumentException("O nome da comida no pode ser nulo ou vazio");
         }
-        if (foodOption.getFoodCalories() == null) {
+        if (foodOption.getCalories() == null) {
             throw new IllegalArgumentException("As calorias da comida devem ser maiores que zero");
         }
-        if (foodOption.getFoodProteins() == null) {
-            throw new IllegalArgumentException("As proteínas da comida devem ser maiores que zero");
+        if (foodOption.getProteins() == null) {
+            throw new IllegalArgumentException("As protenas da comida devem ser maiores que zero");
         }
-        if (foodOption.getFoodCarbs() == null) {
+        if (foodOption.getCarbs() == null) {
             throw new IllegalArgumentException("Os carboidratos da comida devem ser maiores que zero");
         }
-        if (foodOption.getFoodFats() == null) {
+        if (foodOption.getFats() == null) {
             throw new IllegalArgumentException("As gorduras da comida devem ser maiores que zero");
         }
-        if (foodOption.getFoodPortion() == null) {
-            throw new IllegalArgumentException("A porção da comida não pode ser nula");
+        if (foodOption.getPortion() == null) {
+            throw new IllegalArgumentException("A poro da comida no pode ser nula");
         }
     }
 }

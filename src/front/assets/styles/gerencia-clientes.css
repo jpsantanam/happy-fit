@@ -2,12 +2,16 @@
 
 :root{
     /*Paleta de Cores*/
-    --vermelho: #FE5E48;
-    --azul: #5CCAC4;
-    --branco: #FEF9E6;
+    --principal: #FEF9E6;
+    --secundaria: #02232C;
     --preto: #333;
+    --azul: #5CCAC4;
+    --vermelho: #FE5E48;
+    
+
     /*Tipografia*/
     --font-family: "Quicksand", sans-serif;
+
     /*--elemento-atributo-plataforma(d = desktop|m = mobile)*/
     --title-weight: <600>;
     --titleG-size-d: 2.5rem;
@@ -23,17 +27,18 @@
 }
 
 .btn-primary {
-    background-color: var(--vermelho);
-    border-color: var(--branco);
+    background-color: var(--secundaria);
+    border-color: var(--principal);
 }
 
 .btn-primary:hover {
+    border: none;
     background-color: var(--azul);
 }
 
 .btn-secondary {
     background-color: var(--azul);
-    border-color: var(--branco);
+    border-color: var(--principal);
 }
 
 section#vh {
@@ -41,20 +46,55 @@ section#vh {
     padding: 40px 0;
 }
 
-section.atendimento div {
+section.atendimento .cliente {
     margin: 10px 0;
-    padding: 10px 10px;
+    padding: 20px 10px;
     border: solid 2px;
     border-radius: 20px;
-    border-color: var(--branco);
+    border-color: var(--secundaria);
 }
 
 section.atendimento i {
-    color: var(--branco);
+    color: var(--preto);
 }
 
 /*MODAL*/
 #addAtendimento .modal-content,#temPerfil .modal-content {
-    background-color: var(--preto);
+    background-color: var(--principal);
+}
+
+.cancelar{
+    background-color: var(--vermelho);
+}
+
+.cancelar:hover{
+    background-color: var(--vermelho);
+    border: none;
+}
+
+.adicionar{
+    background-color: var(--azul);
+}
+
+.adicionar:hover{
+    background-color: var(--azul);
+    border: none;
+}
+
+.nao{
+    background-color: var(--vermelho);
+}
+
+.nao:hover{
+    background-color: var(--vermelho);
+}
+
+.sim{
+    background-color: var(--azul);
+}
+
+.sim:hover{
+    background-color: var(--azul);
+    border: none;
 }
 /*FIM MODAL*/

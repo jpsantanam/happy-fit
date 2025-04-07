@@ -3,69 +3,65 @@ const Atendimento = (function () {
     // renderizar os usuários na lista de atendimento
     function renderizarAtendimentos(clientes) {
         const atendimentosContainer = document.querySelector('.atendimento');
-        atendimentosContainer.innerHTML = ''; // Limpar o conteúdo anterior
+        atendimentosContainer.innerHTML = ''; // limpar o conteúdo anterior
     
         clientes.forEach(cliente => {
             const atendimentoUsuario = document.createElement('div');
-            atendimentoUsuario.classList.add('d-flex', 'align-items-center', 'justify-content-between', 'mb-3');
+            atendimentoUsuario.classList.add('cliente', 'd-flex','align-items-center', 'justify-content-between', 'mb-3');
     
             const nomeUsuario = document.createElement('p');
             nomeUsuario.classList.add('atendimento-usuario');
             nomeUsuario.textContent = cliente.name;
     
-            const dropdown = document.createElement('div');
-            dropdown.classList.add('dropdown');
-    
-            const botaoDropdown = document.createElement('button');
-            botaoDropdown.classList.add('btn', 'btn-secondary', 'dropdown-toggle');
-            botaoDropdown.setAttribute('type', 'button');
-            botaoDropdown.setAttribute('id', `dropdownMenuButton-${cliente.id}`);
-            botaoDropdown.setAttribute('data-bs-toggle', 'dropdown');
-            botaoDropdown.setAttribute('aria-expanded', 'false');
-            botaoDropdown.innerHTML = '<i class="fa-solid fa-plus"></i>';
-    
-            const dropdownMenu = document.createElement('ul');
-            dropdownMenu.classList.add('dropdown-menu');
-            dropdownMenu.setAttribute('aria-labelledby', `dropdownMenuButton-${cliente.id}`);
+            const acoesContainer = document.createElement('div');
+            acoesContainer.classList.add('acoes-container', 'd-flex', 'gap-2');
     
             if (cliente.profile !== null) {
-                const verPerfilItem = document.createElement('li');
-                const verPerfilLink = document.createElement('a');
-                verPerfilLink.classList.add('dropdown-item');
-                verPerfilLink.href = `dieta.html?userId=${cliente.id}`;
-                verPerfilLink.textContent = 'Ver Perfil';
-                verPerfilItem.appendChild(verPerfilLink);
-                dropdownMenu.appendChild(verPerfilItem);
+                // btn dieta
+                const dietaBotao = document.createElement('button');
+                dietaBotao.classList.add('btn', 'btn-secondary');
+                dietaBotao.textContent = 'Dieta';
+                dietaBotao.addEventListener('click', () => {
+                    localStorage.setItem('selectedUserId', cliente.id);
+                    window.location.href = `dieta.html?userId=${cliente.id}`;
+                });
+                acoesContainer.appendChild(dietaBotao);
     
-                const editarPerfilItem = document.createElement('li');
-                const editarPerfilLink = document.createElement('a');
-                editarPerfilLink.classList.add('dropdown-item');
-                editarPerfilLink.href = `editar-perfil.html?userId=${cliente.id}`;
-                editarPerfilLink.textContent = 'Editar Perfil';
-                editarPerfilItem.appendChild(editarPerfilLink);
-                dropdownMenu.appendChild(editarPerfilItem);
+                // btn diário
+                const diarioBotao = document.createElement('button');
+                diarioBotao.classList.add('btn', 'btn-secondary');
+                diarioBotao.textContent = 'Diário';
+                diarioBotao.addEventListener('click', () => {
+                    localStorage.setItem('selectedUserId', cliente.id);
+                    window.location.href = `diario-alimentar.html?userId=${cliente.id}`;
+                });
+                acoesContainer.appendChild(diarioBotao);
+    
+                // btn editar perfil
+                const editarPerfilBotao = document.createElement('button');
+                editarPerfilBotao.classList.add('btn', 'btn-secondary');
+                editarPerfilBotao.textContent = 'Editar Perfil Alimentar';
+                editarPerfilBotao.addEventListener('click', () => {
+                    window.location.href = `editPerfilAlimentar.html?userId=${cliente.id}`;
+                });
+                acoesContainer.appendChild(editarPerfilBotao);
             } else {
-                const criarPerfilItem = document.createElement('li');
-                const criarPerfilLink = document.createElement('a');
-                criarPerfilLink.classList.add('dropdown-item');
-                criarPerfilLink.href = '#';
-                criarPerfilLink.textContent = 'Criar Perfil';
-                criarPerfilLink.addEventListener('click', function (event) {
+                // btn criar perfil
+                const criarPerfilBotao = document.createElement('button');
+                criarPerfilBotao.classList.add('btn', 'btn-secondary');
+                criarPerfilBotao.textContent = 'Criar Perfil Alimentar';
+                criarPerfilBotao.addEventListener('click', (event) => {
                     event.preventDefault();
                     localStorage.setItem('selectedUserId', cliente.id);
                     const modal = document.getElementById('temPerfil');
                     const modalInstance = new bootstrap.Modal(modal);
                     modalInstance.show();
                 });
-                criarPerfilItem.appendChild(criarPerfilLink);
-                dropdownMenu.appendChild(criarPerfilItem);
+                acoesContainer.appendChild(criarPerfilBotao);
             }
     
-            dropdown.appendChild(botaoDropdown);
-            dropdown.appendChild(dropdownMenu);
-    
             atendimentoUsuario.appendChild(nomeUsuario);
-            atendimentoUsuario.appendChild(dropdown);
+            atendimentoUsuario.appendChild(acoesContainer);
             atendimentosContainer.appendChild(atendimentoUsuario);
         });
     }
@@ -75,7 +71,7 @@ const Atendimento = (function () {
     async function obterUsuarios(nutricionistaId) {
         try {
             // obter os usuários associados ao nutricionista
-            const response = await fetch(`${API_URL}/user/${userId}`, {
+            const response = await fetch(`${API_URL}/user/${nutricionistaId}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

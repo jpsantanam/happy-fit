@@ -1,13 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 
-:root {
+:root{
     /*Paleta de Cores*/
-    --vermelho: #FE5E48;
-    --azul: #5CCAC4;
-    --branco: #FEF9E6;
+    --principal: #FEF9E6;
+    --secundaria: #02232C;
     --preto: #333;
+    --azul: #5CCAC4;
+    --vermelho: #FE5E48;
+    
+
     /*Tipografia*/
     --font-family: "Quicksand", sans-serif;
+
     /*--elemento-atributo-plataforma(d = desktop|m = mobile)*/
     --title-weight: <600>;
     --titleG-size-d: 2.5rem;
@@ -18,61 +22,8 @@
     --text-weight: <400>;
     --text-size-d: 1rem;
     --text-size-m: 0.8rem;
-    --link-size-d: 1.2rem;
-    /*Tamanho do texto dos botões - desktop*/
-    --link-size-m: 1rem;
-    /*Tamanho do texto dos botões - mobile*/
-}
-
-/*Algumas definições gerais*/
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-label {
-    font-family: var(--font-family);
-    font-weight: var(--title-weight);
-    font-size: var(--titleM-size-m);
-    color: var(--preto);
-}
-
-body {
-    background-color: var(--preto);
-}
-
-h1 {
-    font-family: var(--font-family);
-    font-weight: var(--title-weight);
-    font-size: var(--titleG-size-d);
-    color: var(--branco);
-}
-
-h2 {
-    font-family: var(--font-family);
-    font-weight: var(--title-weight);
-    font-size: var(--titleM-size-d);
-    color: var(--branco);
-}
-
-h3 {
-    font-family: var(--font-family);
-    font-weight: var(--title-weight);
-    font-size: var(--titleP-size-d);
-    color: var(--branco);
-}
-
-p {
-    font-family: var(--font-family);
-    color: var(--branco);
-    padding: 10px 0;
-    margin: 0;
-}
-
-a.btn {
-    font-family: var(--font-family);
-    font-size: var(--link-size-d);
+    --link-size-d: 1.2rem; /*Tamanho do texto dos botões - desktop*/
+    --link-size-m: 1rem; /*Tamanho do texto dos botões - mobile*/
 }
 
 section {
@@ -81,52 +32,8 @@ section {
     align-items: center;
 }
 
-.navbar {
-    background-color: var(--preto);
-}
-
-.info {
-    color: rgb(189, 189, 189);
-}
-
-/*HEADER*/
-nav {
-    background-color: var(--preto);
-}
-
-.nav-link {
-    padding: 1em;
-    font-family: var(--font-family);
-    color: var(--branco);
-}
-
-.nav-link:hover {
-    color: var(--azul);
-}
-
-.navbar-nav .nav-link.active {
-    color: var(--azul);
-    text-decoration: underline;
-}
-
-.navbar-toggler {
-    background-color: var(--branco);
-}
-
-.navbar-toggler-icon {
-    color: var(--branco);
-}
-
-.logo {
-    width: 80px;
-}
-
 .info-basics {
    background-color: rgb(50, 50, 50);
-}
-
-.perfil{
-    border-radius: 50%;
 }
 
 .modal-title{
@@ -135,5 +42,22 @@ nav {
 
 #button-perfilAlimentar{
     display: none;
+    background-color: var(--azul);
 }
-/*FIM HEADER*/
+
+#redefinirSenhaButton{
+    border-color: var(--secundaria);
+}
+
+#btn-delete{
+    background-color: var(--vermelho);
+}
+
+#button-editPerfilAlimentar, #button-confirmPassword{
+    background-color: var(--azul);
+}
+
+#btn-close{
+    border-color: var(--vermelho);
+    background-color: var(--vermelho);
+}
